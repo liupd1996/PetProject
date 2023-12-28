@@ -10,6 +10,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.petproject.base.BaseActivity;
+import com.example.petproject.bean.LoginRequest;
+import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.RemoteResult;
 import com.example.petproject.retrofit.ResultFunction;
 import com.example.petproject.retrofit.RetrofitUtils;
@@ -36,6 +38,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
+        Log.d(TAG, "onCreate: ");
     }
 
     @Override
@@ -74,7 +77,7 @@ public class LoginActivity extends BaseActivity {
                 ToastUtils.continuousToast(this, "验证码不能为空");
                 return;
             }
-//            login(userName, verify, 1);
+            login(userName, verify);
         });
         ImageButton button = findViewById(R.id.iv_back);
         button.setOnClickListener(v -> {
@@ -82,34 +85,39 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-//    private void login(String userName, String verify, int type) {
-//        RetrofitUtils.getRetrofitService().login(new LoginRequest(userName, type, verify))
-//                .filter(new ResultFunction())
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<RemoteResult<LoginResponse>>() {
-//                    @Override
-//                    public void onSubscribe(@NonNull Disposable d) {
-//                    }
-//
-//                    @Override
-//                    public void onNext(@NonNull RemoteResult<LoginResponse> result) {
-//                        ConfigPreferences.setLoginName(LoginActivity.this, userName);
-//                        ConfigPreferences.setLoginToken(LoginActivity.this, result.data.access_token);
-//                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-//                        finish();
-//                    }
-//
-//                    @Override
-//                    public void onError(@NonNull Throwable e) {
-//                        ToastUtils.customToast(LoginActivity.this, ExceptionHandle.handleException(e).message);
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                    }
-//                });
-//    }
+    private void login(String userName, String verify) {
+        RetrofitUtils.getRetrofitService().login(new LoginRequest(userName, verify))
+                .filter(new ResultFunction())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RemoteResult<LoginResponse>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(@NonNull RemoteResult<LoginResponse> result) {
+                        ConfigPreferences.setLoginName(LoginActivity.this, userName);
+                        ConfigPreferences.setLoginToken(LoginActivity.this, result.data.refresh_token);
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        //ToastUtils.customToast(LoginActivity.this, ExceptionHandle.handleException(e).message);
+                        Intent intent = new Intent(LoginActivity.this, UserCenterActivity.class);
+                        intent.putExtra("phone", userName);
+                        intent.putExtra("smsCode", verify);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
 
     private void start() {
         //Intent intent = getPackageManager().getLaunchIntentForPackage("com.zte.appstore.ui");//根据intent是否为空来判断是否安装应用

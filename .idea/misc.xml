@@ -3,13 +3,27 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_gray_corner_20dp.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_main_color.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_selector.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_un_clickable.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/corner_black_back_8dp.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/corner_blue_back_4dp.xml" value="0.1535" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/data_selector.xml" value="0.1535" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/friend_selector.xml" value="0.26" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/map_selector.xml" value="0.1535" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/me_selector.xml" value="0.1535" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/msg_selector.xml" value="0.1535" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/tab_selector.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/title_icon_back_rtl.xml" value="0.3225" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_login.xml" value="0.20199275362318841" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_main.xml" value="0.20199275362318841" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_user_center.xml" value="0.2546875" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab1.xml" value="0.20199275362318841" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab2.xml" value="0.20199275362318841" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab3.xml" value="0.20199275362318841" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab4.xml" value="0.20199275362318841" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab5.xml" value="0.20199275362318841" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/header_bar.xml" value="0.4661458333333333" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/layout_toast.xml" value="0.4661458333333333" />
       </map>

@@ -1,11 +1,15 @@
 package com.example.petproject.retrofit;
 
+import com.example.petproject.bean.LoginRequest;
+import com.example.petproject.bean.LoginResponse;
+import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
 import com.example.petproject.bean.SmsRequest;
 
 import io.reactivex.Observable;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 
@@ -15,6 +19,12 @@ public interface RetrofitService {
 
     @GET("/msm/send/{phone}")
     Observable<RemoteResult<Object>> getVerify(@Path("phone") String phone);
+
+    @POST("/oauth/token")
+    Observable<RemoteResult<LoginResponse>> login(@Body LoginRequest request);
+
+    @POST("/user/register")
+    Observable<RemoteResult<Object>> register(@Body RegisterRequest request);
 
 //    @POST("/api/home/application")
 //    Observable<RemoteResult<AntiResponse>> getAntiResult(@Header("token") String token, @Body AntiRequest request);
