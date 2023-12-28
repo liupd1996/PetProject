@@ -15,9 +15,11 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.AMap;
+import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
+import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.MyLocationStyle;
 
 public class TabFragment3 extends Fragment implements LocationSource,
@@ -26,6 +28,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
     private View view;
     private MapView mapView;
     private AMap aMap;
+    private AMapLocation amapLocation;
 
     private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
@@ -52,6 +55,13 @@ public class TabFragment3 extends Fragment implements LocationSource,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tab3, container, false);
+        view.findViewById(R.id.btn_locate).setOnClickListener(view -> {
+            Log.d("1111", "click: ");
+            if (amapLocation != null) {
+                aMap.setMyLocationEnabled(true);
+                aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude()), 15)); // yourLatitude和yourLongitude是定位得到的经纬度信息
+            }
+        });
         mapView = (MapView) view.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         init();
@@ -73,6 +83,8 @@ public class TabFragment3 extends Fragment implements LocationSource,
      */
     private void setUpMap() {
         // 自定义系统定位小蓝点
+        AMapLocationClient.updatePrivacyAgree(getContext(),true);
+        AMapLocationClient.updatePrivacyShow(getContext(),true,true);
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory
                 .fromResource(R.mipmap.location_marker));// 设置小蓝点的图标
@@ -119,6 +131,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
         if (mListener != null && amapLocation != null) {
             if (amapLocation != null
                     && amapLocation.getErrorCode() == 0) {
+                this.amapLocation = amapLocation;
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
                 Log.d("1111", amapLocation.toString());
             } else {
