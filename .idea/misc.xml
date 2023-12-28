@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_gray_corner_20dp.xml" value="0.1535" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_white_corner_20dp.xml" value="0.2055" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_white_corner_4dp.xml" value="0.2055" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_main_color.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_selector.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_un_clickable.xml" value="0.1535" />

@@ -12,11 +12,15 @@
 
     <Button
         android:id="@+id/btn_locate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableTop="@color/black"
+        android:layout_width="80dp"
+        android:layout_height="90dp"
+        android:drawableTop="@mipmap/location"
+        android:drawablePadding="5dp"
+        android:background="@drawable/bg_white_corner_4dp"
         android:text="获取定位"
+        android:textColor="#1296db"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="40dp"/>
+        android:layout_marginBottom="40dp"
+        android:gravity="center"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
