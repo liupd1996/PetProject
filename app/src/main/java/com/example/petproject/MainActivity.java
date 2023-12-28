@@ -73,7 +73,11 @@ public class MainActivity extends BaseActivity {
         tab5.setIcon(R.drawable.me_selector); // 设置图标
     }
 
-    public String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
+    public String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
+            , Manifest.permission.ACCESS_FINE_LOCATION
+            ,Manifest.permission.ACCESS_COARSE_LOCATION
+            ,Manifest.permission.ACCESS_NETWORK_STATE
+            };
 
     private boolean checkPermission() {
         for (int i = 0; i < permissions.length; i++) {
