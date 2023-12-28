@@ -1,12 +1,15 @@
 package com.example.petproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
-import android.graphics.Color;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.ImageButton;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.petproject.adapter.MyFragmentPagerAdapter2;
 import com.example.petproject.base.BaseActivity;
@@ -20,6 +23,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkPermission();
         initView();
     }
 
@@ -31,8 +35,6 @@ public class MainActivity extends BaseActivity {
     private void initView() {
         ViewPager viewPager = findViewById(R.id.viewpager);
         TabLayout tabLayout = findViewById(R.id.tabs);
-        ImageButton button = findViewById(R.id.iv_back);
-        button.setOnClickListener(v -> { onBackPressed(); });
 
         List<Fragment> fragments = new ArrayList<>();
         TabFragment1 fragment1 = TabFragment1.newInstance(1);
@@ -69,8 +71,35 @@ public class MainActivity extends BaseActivity {
         TabLayout.Tab tab5 = tabLayout.getTabAt(4);
         tab5.setText("我的");
         tab5.setIcon(R.drawable.me_selector); // 设置图标
+    }
 
+    public String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
 
+    private boolean checkPermission() {
+        for (int i = 0; i < permissions.length; i++) {
+            if (ContextCompat.checkSelfPermission(this, permissions[i]) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, permissions, 1);
+                return false;
+            }
+        }
+        return true;
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        boolean hasPermissionDismiss = false;
+        if (1 == requestCode) {
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] == -1) {
+                    hasPermissionDismiss = true;
+                }
+            }
+
+            if (hasPermissionDismiss) {
+                //
+            } else {
+            }
+        }
     }
 }
