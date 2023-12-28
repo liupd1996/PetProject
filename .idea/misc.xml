@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_main_color.xml" value="0.1535" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_selector.xml" value="0.1535" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_un_clickable.xml" value="0.1535" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/corner_black_back_8dp.xml" value="0.1535" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/corner_blue_back_4dp.xml" value="0.1535" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/title_icon_back_rtl.xml" value="0.3225" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_login.xml" value="0.20199275362318841" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/header_bar.xml" value="0.4661458333333333" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/layout_toast.xml" value="0.4661458333333333" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
