@@ -1,5 +1,6 @@
 package com.example.petproject.utils;
 import android.net.ParseException;
+import android.util.Log;
 
 import com.example.petproject.retrofit.ResultException;
 import com.google.gson.JsonParseException;
@@ -7,9 +8,11 @@ import com.google.gson.JsonParseException;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.net.ConnectException;
 
 import retrofit2.HttpException;
+import retrofit2.Response;
 
 public class ExceptionHandle {
 
@@ -26,6 +29,16 @@ public class ExceptionHandle {
         ResponeThrowable ex;
         if (e instanceof HttpException) {
             HttpException httpException = (HttpException) e;
+            Response<?> response = httpException.response(); // 获取响应对象
+            if (response != null && response.errorBody() != null) {
+                String errorBody = null; // 获取错误响应体字符串
+                try {
+                    errorBody = response.errorBody().string();
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+                Log.d("1111", "Error Body: " + errorBody);
+            }
             ex = new ResponeThrowable(e, ERROR.HTTP_ERROR);
             switch (httpException.code()) {
                 case UNAUTHORIZED:

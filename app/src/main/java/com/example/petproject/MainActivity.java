@@ -1,9 +1,11 @@
 package com.example.petproject;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.widget.ImageButton;
+import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -13,16 +15,23 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.petproject.adapter.MyFragmentPagerAdapter2;
 import com.example.petproject.base.BaseActivity;
+import com.example.petproject.utils.ConfigPreferences;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
-
+    private static final String STRING_FORMAT = "%1$s://%2$s";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (TextUtils.isEmpty(ConfigPreferences.login_token(this))) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
+        String url = String.format(STRING_FORMAT, "http", "10.253.6.19");
+        Log.d("1111", "onCreate: " + url);
         checkPermission();
         initView();
     }

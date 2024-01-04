@@ -10,6 +10,7 @@ import com.example.petproject.bean.LoginRequest;
 import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
+import com.example.petproject.retrofit.LoginFunction;
 import com.example.petproject.retrofit.ResultFunction;
 import com.example.petproject.retrofit.RetrofitUtils;
 import com.example.petproject.utils.ConfigPreferences;
@@ -86,19 +87,18 @@ public class UserCenterActivity extends BaseActivity {
     }
 
     private void login(String userName, String verify) {
-        RetrofitUtils.getRetrofitService().login(new LoginRequest(userName, verify))
-                .filter(new ResultFunction())
+        RetrofitUtils.getRetrofitService().login(userName, verify,"password","mydog","all","myDog")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<RemoteResult<LoginResponse>>() {
+                .subscribe(new Observer<LoginResponse>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                     }
 
                     @Override
-                    public void onNext(@NonNull RemoteResult<LoginResponse> result) {
+                    public void onNext(@NonNull LoginResponse result) {
                         ConfigPreferences.setLoginName(UserCenterActivity.this, userName);
-                        ConfigPreferences.setLoginToken(UserCenterActivity.this, result.data.refresh_token);
+                        ConfigPreferences.setLoginToken(UserCenterActivity.this, result.refresh_token);
                         startActivity(new Intent(UserCenterActivity.this, MainActivity.class));
                         ToastUtils.customToast(UserCenterActivity.this, "登录成功");
                         finish();

@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.petproject.base.BaseActivity;
-import com.example.petproject.bean.LoginRequest;
 import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.RemoteResult;
 import com.example.petproject.retrofit.ResultFunction;
@@ -86,26 +85,25 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login(String userName, String verify) {
-        RetrofitUtils.getRetrofitService().login(new LoginRequest(userName, verify))
-                .filter(new ResultFunction())
+        RetrofitUtils.getRetrofitService().login(userName, verify,"password","mydog","all","myDog")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<RemoteResult<LoginResponse>>() {
+                .subscribe(new Observer<LoginResponse>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                     }
 
                     @Override
-                    public void onNext(@NonNull RemoteResult<LoginResponse> result) {
+                    public void onNext(@NonNull LoginResponse result) {
                         ConfigPreferences.setLoginName(LoginActivity.this, userName);
-                        ConfigPreferences.setLoginToken(LoginActivity.this, result.data.refresh_token);
+                        ConfigPreferences.setLoginToken(LoginActivity.this, result.refresh_token);
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         finish();
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        //ToastUtils.customToast(LoginActivity.this, ExceptionHandle.handleException(e).message);
+                        ToastUtils.customToast(LoginActivity.this, ExceptionHandle.handleException(e).message);
                         Intent intent = new Intent(LoginActivity.this, UserCenterActivity.class);
                         intent.putExtra("phone", userName);
                         intent.putExtra("smsCode", verify);
