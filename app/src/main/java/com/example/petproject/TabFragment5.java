@@ -1,9 +1,11 @@
 package com.example.petproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
 
@@ -33,6 +35,11 @@ public class TabFragment5 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tab5, container, false);
+        LinearLayout ll_setting = view.findViewById(R.id.ll_setting);
+        ll_setting.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(),SettingActivity.class);
+            startActivity(intent);
+        });
         return view;
     }
 

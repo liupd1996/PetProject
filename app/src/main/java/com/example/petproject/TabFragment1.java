@@ -1,5 +1,6 @@
 package com.example.petproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,6 +55,38 @@ public class TabFragment1 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tab1, container, false);
+        view.findViewById(R.id.cl_news).setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(),DataActivity.class);
+            startActivity(intent);
+        });
+        view.findViewById(R.id.cl_breanth).setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(),DataActivity.class);
+            startActivity(intent);
+        });
+        view.findViewById(R.id.cl_sleep).setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(),DataActivity.class);
+            startActivity(intent);
+        });
+        view.findViewById(R.id.cl_heart).setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(),DataActivity.class);
+            startActivity(intent);
+        });
+        view.findViewById(R.id.cl_temperature).setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(),DataActivity.class);
+            startActivity(intent);
+        });
+        view.findViewById(R.id.tv_exercise).setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(),DataActivity.class);
+            startActivity(intent);
+        });
+        view.findViewById(R.id.cl_weight).setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(),DataActivity.class);
+            startActivity(intent);
+        });
+        view.findViewById(R.id.cl_pet_diary).setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(),DataActivity.class);
+            startActivity(intent);
+        });
         client = new OkHttpClient();
         startWebSocket();
         return view;

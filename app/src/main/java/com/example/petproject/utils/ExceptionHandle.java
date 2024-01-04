@@ -16,6 +16,7 @@ import retrofit2.Response;
 
 public class ExceptionHandle {
 
+    private static final int OTHER = 400;
     private static final int UNAUTHORIZED = 401;
     private static final int FORBIDDEN = 403;
     private static final int NOT_FOUND = 404;
@@ -29,18 +30,23 @@ public class ExceptionHandle {
         ResponeThrowable ex;
         if (e instanceof HttpException) {
             HttpException httpException = (HttpException) e;
-            Response<?> response = httpException.response(); // 获取响应对象
-            if (response != null && response.errorBody() != null) {
-                String errorBody = null; // 获取错误响应体字符串
-                try {
-                    errorBody = response.errorBody().string();
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
-                Log.d("1111", "Error Body: " + errorBody);
-            }
             ex = new ResponeThrowable(e, ERROR.HTTP_ERROR);
             switch (httpException.code()) {
+                case OTHER:
+                    Response<?> response = httpException.response(); // 获取响应对象
+                    if (response != null && response.errorBody() != null) {
+                        String errorBody = null; // 获取错误响应体字符串
+                        try {
+                            errorBody = response.errorBody().string();
+                        } catch (IOException exc) {
+                            exc.printStackTrace();
+                        }
+                        if (errorBody != null) {
+                            ex.message = errorBody;
+                        } else {
+                            ex.message = "未知错误";
+                        }
+                    }
                 case UNAUTHORIZED:
                 case FORBIDDEN:
                 case NOT_FOUND:

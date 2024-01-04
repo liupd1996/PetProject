@@ -37,7 +37,6 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
-        Log.d(TAG, "onCreate: ");
     }
 
     @Override
@@ -103,11 +102,14 @@ public class LoginActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        ToastUtils.customToast(LoginActivity.this, ExceptionHandle.handleException(e).message);
-                        Intent intent = new Intent(LoginActivity.this, UserCenterActivity.class);
-                        intent.putExtra("phone", userName);
-                        intent.putExtra("smsCode", verify);
-                        startActivity(intent);
+                        if (ExceptionHandle.handleException(e).message.equals("SS0002")) {//SS0002为手机号未注册的情况、SS0001为验证码问题
+                            Intent intent = new Intent(LoginActivity.this, UserCenterActivity.class);
+                            intent.putExtra("phone", userName);
+                            intent.putExtra("smsCode", verify);
+                            startActivity(intent);
+                        } else {
+                            ToastUtils.customToast(LoginActivity.this, ExceptionHandle.handleException(e).message);
+                        }
                     }
 
                     @Override

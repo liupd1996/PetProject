@@ -94,7 +94,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_title_gender"/>
 
     <Button
-        android:id="@+id/btn_login_out"
+        android:id="@+id/btn_register"
         android:layout_width="130dp"
         android:layout_height="44dp"
         android:background="@drawable/corner_blue_back_4dp"

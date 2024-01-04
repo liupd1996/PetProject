@@ -1,5 +1,6 @@
 package com.example.petproject;
 
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,13 +19,29 @@ import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
+import com.amap.api.maps2d.model.BitmapDescriptor;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
+import com.example.petproject.bean.JsonDevice;
+import com.example.petproject.bean.JsonRequest;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TabFragment3 extends Fragment implements LocationSource,
         AMapLocationListener{
-    private static final String TAG = "TabFragment1";
+    private static final String TAG = "TabFragment3";
     private View view;
     private MapView mapView;
     private AMap aMap;
@@ -33,6 +50,11 @@ public class TabFragment3 extends Fragment implements LocationSource,
     private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
+
+    WebSocketClient mWebSocketClient;
+    private double longitude;
+    private double latitude;
+
     public TabFragment3() {
         // Required empty public constructor
     }
@@ -56,10 +78,11 @@ public class TabFragment3 extends Fragment implements LocationSource,
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tab3, container, false);
         view.findViewById(R.id.btn_locate).setOnClickListener(view -> {
-            if (amapLocation != null) {
-                aMap.setMyLocationEnabled(true);
-                aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude()), 15)); // yourLatitude和yourLongitude是定位得到的经纬度信息
-            }
+//            if (amapLocation != null) {
+//                aMap.setMyLocationEnabled(true);
+//                aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude()), 15)); // yourLatitude和yourLongitude是定位得到的经纬度信息
+//            }
+            setPosition(latitude, longitude);
         });
         mapView = (MapView) view.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
@@ -73,6 +96,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
     private void init() {
         aMap = mapView.getMap();
         setUpMap();
+        startWebSocket();
     }
 
     /**
@@ -166,7 +190,8 @@ public class TabFragment3 extends Fragment implements LocationSource,
             // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
             // 在定位结束后，在合适的生命周期调用onDestroy()方法
             // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-            mlocationClient.startLocation();
+
+            //mlocationClient.startLocation();
         }
     }
 
@@ -181,5 +206,84 @@ public class TabFragment3 extends Fragment implements LocationSource,
             mlocationClient.onDestroy();
         }
         mlocationClient = null;
+    }
+
+    public void startWebSocket() {
+        mWebSocketClient = new WebSocketClient(URI.create("ws://139.186.13.82:3003/terminal/realtime")) {
+
+            @Override
+            public void onOpen(ServerHandshake serverHandshake) {
+                // 连接成功时的处理
+                if (mWebSocketClient != null) {
+                    JsonRequest request = new JsonRequest();
+                    request.setRequestType(1);
+
+                    JsonRequest.Data data = new JsonRequest.Data();
+                    data.setTerminalID("10069096400");
+                    data.setSubscribe(true);
+
+                    request.setData(data);
+                    List<JsonRequest> jsonRequests = new ArrayList<>();
+                    jsonRequests.add(request);
+                    // 初始化 Gson 对象
+                    Gson gson = new Gson();
+
+                    // 将对象转换为 JSON 字符串
+                    String jsonString = gson.toJson(jsonRequests);
+                    mWebSocketClient.send(jsonString);
+                }
+            }
+
+            @Override
+            public void onMessage(String s) {
+                Log.d(TAG, "onMessage1111: " + s);
+                try {
+                    // 解析 JSON 数组
+                    JSONArray jsonArray = new JSONArray(s);
+                    Log.d(TAG, "1111: " + jsonArray.length());
+                    // 遍历 JSON 数组
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                        // 获取 JSON 对象中的字段
+                        JSONObject dataObject = jsonObject.getJSONObject("Data");
+                        longitude = dataObject.getDouble("Longitude");
+                        latitude = dataObject.getDouble("Latitude");
+                        Log.d(TAG, "1111: " + "Longitude: " + longitude + ", Latitude: " + latitude);
+                        // 输出字段值
+                        setPosition(latitude, longitude);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onClose(int i, String s, boolean b) {
+                // 连接关闭时的处理
+            }
+
+            @Override
+            public void onError(Exception e) {
+                // 连接失败时的处理
+            }
+        };
+
+        mWebSocketClient.connect();
+    }
+
+
+    private void setPosition(double latitude,double longitude) {
+
+        // 创建经纬度对象
+        LatLng latLng = new LatLng(latitude, longitude);
+
+        // 在指定的经纬度位置添加标记
+        MarkerOptions markerOptions = new MarkerOptions().position(latLng)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.dog_icon)); // 设置自定义图标资源;
+        aMap.addMarker(markerOptions);
+
+        // 将地图视图移动到指定的经纬度位置
+        aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15)); // 设置缩放级别为 15
     }
 }

@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.petproject.base.BaseActivity;
-import com.example.petproject.bean.LoginRequest;
 import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
-import com.example.petproject.retrofit.LoginFunction;
 import com.example.petproject.retrofit.ResultFunction;
 import com.example.petproject.retrofit.RetrofitUtils;
 import com.example.petproject.utils.ConfigPreferences;
@@ -49,7 +47,7 @@ public class UserCenterActivity extends BaseActivity {
         findViewById(R.id.iv_back).setOnClickListener(v -> {
             onBackPressed();
         });
-        findViewById(R.id.btn_login_out).setOnClickListener(v -> {
+        findViewById(R.id.btn_register).setOnClickListener(v -> {
             ConfigPreferences.setLoginToken(this, "");
             startActivity(new Intent(UserCenterActivity.this, LoginActivity.class));
             finish();
