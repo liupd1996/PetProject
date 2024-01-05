@@ -7,6 +7,7 @@ import com.google.gson.JsonParseException;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -36,17 +37,22 @@ public class ExceptionHandle {
                     Response<?> response = httpException.response(); // 获取响应对象
                     if (response != null && response.errorBody() != null) {
                         String errorBody = null; // 获取错误响应体字符串
+                        String message = null; // 获取错误响应体字符串
                         try {
                             errorBody = response.errorBody().string();
-                        } catch (IOException exc) {
+
+                            JSONObject jsonObject = new JSONObject(errorBody);
+                            message = jsonObject.getString("error_description");
+                        } catch (Exception exc) {
                             exc.printStackTrace();
                         }
-                        if (errorBody != null) {
-                            ex.message = errorBody;
+                        if (message != null) {
+                            ex.message = message;
                         } else {
                             ex.message = "未知错误";
                         }
                     }
+                    break;
                 case UNAUTHORIZED:
                 case FORBIDDEN:
                 case NOT_FOUND:
@@ -59,6 +65,7 @@ public class ExceptionHandle {
                     ex.message = "网络错误" + httpException.code();
                     break;
             }
+            Log.d("1111", "handleException: " + ex.message);
             return ex;
         } else if (e instanceof ResultException) {
             ResultException resultException = (ResultException) e;

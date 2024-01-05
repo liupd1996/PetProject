@@ -2,6 +2,7 @@ package com.example.petproject.utils;
 
 
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.widget.TextView;
 
 public class TimeCount extends CountDownTimer {
@@ -17,7 +18,9 @@ public class TimeCount extends CountDownTimer {
     public void onTick(long millisUntilFinished) {
         tv_count.setEnabled(false);
         String text = millisUntilFinished / 1000 + "秒";
+        Log.d("1111", "onTick: " + text);
         tv_count.setText(text);
+        tv_count.invalidate();
     }
 
     @Override

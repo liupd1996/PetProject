@@ -3,6 +3,8 @@ package com.example.petproject;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
@@ -102,11 +104,16 @@ public class LoginActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        if (ExceptionHandle.handleException(e).message.equals("SS0002")) {//SS0002为手机号未注册的情况、SS0001为验证码问题
+                        String message = ExceptionHandle.handleException(e).message;
+                        Log.d(TAG, "handleException onError1111: ");
+                        if (message.equals("SS0002")) {//SS0002为手机号未注册的情况、SS0001为验证码问题
                             Intent intent = new Intent(LoginActivity.this, UserCenterActivity.class);
                             intent.putExtra("phone", userName);
                             intent.putExtra("smsCode", verify);
                             startActivity(intent);
+                        } else if (message.equals("SS0001")) {
+                            Log.d(TAG, "handleException 验证码问题: ");
+                            ToastUtils.customToast(LoginActivity.this, "验证码问题");
                         } else {
                             ToastUtils.customToast(LoginActivity.this, ExceptionHandle.handleException(e).message);
                         }
@@ -142,7 +149,6 @@ public class LoginActivity extends BaseActivity {
             Log.e(TAG, "start HOME error: ");
         }
     }
-
     private void getVerify(String phone) {
         RetrofitUtils.getRetrofitService().getVerify(phone)
                 .filter(new ResultFunction())
@@ -155,6 +161,7 @@ public class LoginActivity extends BaseActivity {
 
                     @Override
                     public void onNext(@NonNull RemoteResult result) {
+                        Log.d(TAG, "getVerify onNext: ");
                         mTimeCount.start();
                     }
 
@@ -165,6 +172,7 @@ public class LoginActivity extends BaseActivity {
 
                     @Override
                     public void onComplete() {
+                        Log.d(TAG, "onComplete: ");
                     }
                 });
     }

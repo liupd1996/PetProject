@@ -17,6 +17,8 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.location.CoordinateConverter;
+import com.amap.api.location.DPoint;
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.LocationSource;
@@ -28,6 +30,7 @@ import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
 import com.example.petproject.bean.JsonDevice;
 import com.example.petproject.bean.JsonRequest;
+import com.example.petproject.utils.DataUtils;
 import com.example.petproject.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -49,7 +52,6 @@ public class TabFragment3 extends Fragment implements LocationSource,
     private MapView mapView;
     private AMap aMap;
     private AMapLocation amapLocation;
-
     private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
@@ -267,6 +269,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
                         Log.d(TAG, "1111: " + "Longitude: " + longitude + ", Latitude: " + latitude);
                         // 输出字段值
                         setPosition(latitude, longitude);
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -289,17 +292,28 @@ public class TabFragment3 extends Fragment implements LocationSource,
 
 
     private void setPosition(double latitude,double longitude) {
-
-        // 创建经纬度对象
+        CoordinateConverter converter  = new CoordinateConverter(getContext());
+// CoordType.GPS 待转换坐标类型
+        converter.from(CoordinateConverter.CoordType.GPS);
+// sourceLatLng待转换坐标点 LatLng类型
         LatLng latLng = new LatLng(latitude, longitude);
+        try {
+            converter.coord(new DPoint(latLng.latitude, latLng.longitude));
+// 执行转换操作
+            DPoint dPoint = converter.convert();
+            // 创建经纬度对象
+            // 在指定的经纬度位置添加标记
+            aMap.removecache();
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(new LatLng(dPoint.getLatitude(),dPoint.getLongitude()))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.dog_icon)); // 设置自定义图标资源;
+            aMap.addMarker(markerOptions);
+            // 将地图视图移动到指定的经纬度位置
+            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15)); // 设置缩放级别为 15
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        // 在指定的经纬度位置添加标记
-        aMap.removecache();
-        MarkerOptions markerOptions = new MarkerOptions().position(latLng)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.dog_icon)); // 设置自定义图标资源;
-        aMap.addMarker(markerOptions);
 
-        // 将地图视图移动到指定的经纬度位置
-        aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15)); // 设置缩放级别为 15
     }
 }
