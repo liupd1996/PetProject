@@ -33,6 +33,7 @@ public class LoginActivity extends BaseActivity {
     private EditText mEditName;
     private EditText mEditVerify;
     private TimeCount mTimeCount;
+    private TextView tv_notify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +50,19 @@ public class LoginActivity extends BaseActivity {
     private void initView() {
         mEditName = findViewById(R.id.edit_account);
         mEditVerify = findViewById(R.id.verifyEditor);
+        tv_notify = findViewById(R.id.tv_notify);
         mEditName.setText(ConfigPreferences.login_name(this));
         TextView btnVerify = findViewById(R.id.accessVerifyCode);
         mTimeCount = new TimeCount(60000, 1000, btnVerify);
         btnVerify.setOnClickListener(v -> {
             if (TextUtils.isEmpty(mEditName.getText().toString())) {
                 ToastUtils.continuousToast(LoginActivity.this, "手机号不能为空");
+                tv_notify.setText("手机号不能为空");
                 return;
             }
             if (!Utils.isMobileNumber(mEditName.getText().toString())) {
                 ToastUtils.continuousToast(LoginActivity.this, "请输入正确手机号");
+                tv_notify.setText("请输入正确手机号");
                 return;
             }
             getVerify(mEditName.getText().toString());
@@ -70,11 +74,13 @@ public class LoginActivity extends BaseActivity {
             String userName = mEditName.getText().toString();
             String verify = mEditVerify.getText().toString();
             if (TextUtils.isEmpty(userName)) {
-                ToastUtils.continuousToast(this, "账号不能为空");
+                ToastUtils.continuousToast(this, "手机号不能为空");
+                tv_notify.setText("手机号不能为空");
                 return;
             }
             if (TextUtils.isEmpty(verify)) {
                 ToastUtils.continuousToast(this, "验证码不能为空");
+                tv_notify.setText("验证码不能为空");
                 return;
             }
             login(userName, verify);

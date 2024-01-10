@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.petproject"
-    android:versionCode="1"
-    android:versionName="1.0">
+    android:versionCode="2"
+    android:versionName="1.1">
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许获取粗略位置，若用GPS实现定位小蓝点功能则必选 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 允许获取网络状态，用于网络定位，若无gps但仍需实现定位小蓝点功能则此权限必选 -->
@@ -19,7 +19,11 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
+
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -41,6 +45,18 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="330e6e543e575012045c52b3de20fd24" />
+
+        <meta-data
+            android:name="PGYER_FEATURE_CHECK_UNPDATE"
+            android:value="true" />
+
+        <meta-data
+            android:name="PGYER_API_KEY"
+            android:value="c48c38a81292a719b9aacfcabbe793c0"/>
+
+        <meta-data
+            android:name="PGYER_FRONTJS_KEY"
+            android:value="9a420494bab917f8086902d9a5a62c2f"/>
 
         <service android:name="com.amap.api.location.APSService" />
 

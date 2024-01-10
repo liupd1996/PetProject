@@ -1,5 +1,6 @@
 package com.example.petproject.retrofit;
 
+import com.example.petproject.bean.InstallResponse;
 import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
@@ -11,6 +12,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 
 public interface RetrofitService {
@@ -36,6 +38,11 @@ public interface RetrofitService {
 
     @POST("/user/register")
     Observable<RemoteResult<Object>> register(@Body RegisterRequest request);
+
+    @GET("https://www.pgyer.com/apiv2/app/install")
+    Observable<InstallResponse> appInstall(@Query("_api_key") String apiKey,
+                                           @Query("appKey") String appKey,
+                                           @Query("buildKey") String buildKey);
 
 //    @POST("/api/home/application")
 //    Observable<RemoteResult<AntiResponse>> getAntiResult(@Header("token") String token, @Body AntiRequest request);

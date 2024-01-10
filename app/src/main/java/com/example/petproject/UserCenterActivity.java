@@ -48,14 +48,11 @@ public class UserCenterActivity extends BaseActivity {
             onBackPressed();
         });
         findViewById(R.id.btn_register).setOnClickListener(v -> {
-            ConfigPreferences.setLoginToken(this, "");
-            startActivity(new Intent(UserCenterActivity.this, LoginActivity.class));
-            finish();
+            Intent intent = getIntent();
+            String phone = intent.getStringExtra("phone");
+            String smsCode = intent.getStringExtra("smsCode");
+            register(phone,smsCode,"test");
         });
-        Intent intent = getIntent();
-        String phone = intent.getStringExtra("phone");
-        String smsCode = intent.getStringExtra("smsCode");
-        register(phone,smsCode,"test");
     }
 
     private void register(String phone, String smsCode, String name) {
