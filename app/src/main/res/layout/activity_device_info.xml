@@ -91,6 +91,38 @@
             android:text="正常"/>
 
 
+        <Button
+            android:id="@+id/btn_unbind"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_red_corner_10dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_run_state"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="50dp"
+            app:layout_constraintWidth_percent="0.45"
+            android:text="解绑设备"
+            android:layout_marginBottom="50dp"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_red_corner_10dp"
+            app:layout_constraintTop_toTopOf="@+id/btn_unbind"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_unbind"
+            app:layout_constraintStart_toEndOf="@+id/btn_unbind"
+            app:layout_constraintWidth_percent="0.45"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="关闭设备"/>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

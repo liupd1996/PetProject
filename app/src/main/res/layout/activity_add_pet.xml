@@ -4,32 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PetActivity"
+    tools:context=".AddPetActivity"
     android:background="@drawable/bk_gradient">
     <include
         android:id="@+id/cl_title_bar"
         layout="@layout/header_bar"/>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_pet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/cl_title_bar"
+
+    <com.example.petproject.customview.CircularImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_title_bar"
+        android:background="@drawable/default_avator"
+        android:layout_marginTop="20dp"/>
     <Button
-        android:id="@+id/btn_add"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/bg_red_corner_10dp"
-        app:layout_constraintTop_toBottomOf="@+id/rv_pet"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginTop="20dp"
-        android:text="添加宠物"/>
+        android:text="保存"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

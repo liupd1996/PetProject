@@ -1,14 +1,12 @@
 package com.example.petproject;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.petproject.base.BaseActivity;
 
-public class PetActivity extends BaseActivity {
+public class AddPetActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,15 +16,11 @@ public class PetActivity extends BaseActivity {
             onBackPressed();
         });
         TextView title = findViewById(R.id.tv_bar_title);
-        title.setText("我的宠物");
-        findViewById(R.id.btn_add).setOnClickListener(view -> {
-            Intent intent = new Intent(PetActivity.this,AddPetActivity.class);
-            startActivity(intent);
-        });
+        title.setText("添加宠物");
     }
 
     @Override
     public int getContentView() {
-        return R.layout.activity_pet;
+        return R.layout.activity_add_pet;
     }
 }
