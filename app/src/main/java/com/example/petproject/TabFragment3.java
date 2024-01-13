@@ -1,6 +1,5 @@
 package com.example.petproject;
 
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,17 +22,14 @@ import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
-import com.amap.api.maps2d.model.BitmapDescriptor;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
-import com.example.petproject.bean.JsonDevice;
 import com.example.petproject.bean.JsonRequest;
-import com.example.petproject.utils.DataUtils;
 import com.example.petproject.utils.ToastUtils;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -46,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TabFragment3 extends Fragment implements LocationSource,
-        AMapLocationListener{
+        AMapLocationListener {
     private static final String TAG = "TabFragment3";
     private View view;
     private MapView mapView;
@@ -57,8 +53,9 @@ public class TabFragment3 extends Fragment implements LocationSource,
     private AMapLocationClientOption mLocationOption;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     WebSocketClient mWebSocketClient;
-    private double longitude;
-    private double latitude;
+    private double longitude = -1;
+    private double latitude = -1;
+    private Marker marker;
 
     public TabFragment3() {
         // Required empty public constructor
@@ -82,18 +79,45 @@ public class TabFragment3 extends Fragment implements LocationSource,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tab3, container, false);
-        view.findViewById(R.id.btn_locate).setOnClickListener(view -> {
+        view.findViewById(R.id.cl_location).setOnClickListener(view -> {
             Log.d(TAG, "onCreateView: " + amapLocation);
             if (amapLocation != null) {
                 Log.d(TAG, "btn_locate: ");
                 aMap.setMyLocationEnabled(true);
+                mHandler.removeCallbacks(mRunnable);
+                ToastUtils.continuousToast(getContext(), "宠物定位中...");
+                mHandler.postDelayed(mRunnable, 3000);
+                aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(amapLocation.getLatitude() + 0.0001, amapLocation.getLongitude() + 0.0001), 15)); // yourLatitude和yourLongitude是定位得到的经纬度信息
+            } else {
+                ToastUtils.continuousToast(getContext(), "设备定位中请稍后...");
+            }
+        });
+
+        view.findViewById(R.id.cl_location_device).setOnClickListener(view -> {
+            Log.d(TAG, "onCreateView: " + amapLocation);
+            if (amapLocation != null) {
+                aMap.setMyLocationEnabled(true);
                 aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude()), 15)); // yourLatitude和yourLongitude是定位得到的经纬度信息
                 mHandler.removeCallbacks(mRunnable);
-                ToastUtils.continuousToast(getContext(),"宠物定位中...");
-                mHandler.postDelayed(mRunnable,3000);
+                ToastUtils.continuousToast(getContext(), "本机定位中...");
+            } else {
+                ToastUtils.continuousToast(getContext(), "设备定位中请稍后...");
             }
-            //setPosition(latitude, longitude);
         });
+
+        view.findViewById(R.id.cl_only).setOnClickListener(view -> {
+            ToastUtils.continuousToast(getContext(), "功能升级中");
+        });
+        view.findViewById(R.id.cl_market).setOnClickListener(view -> {
+            ToastUtils.continuousToast(getContext(), "功能升级中");
+        });
+        view.findViewById(R.id.cl_fence).setOnClickListener(view -> {
+            ToastUtils.continuousToast(getContext(), "功能升级中");
+        });
+        view.findViewById(R.id.cl_find).setOnClickListener(view -> {
+            ToastUtils.continuousToast(getContext(), "功能升级中");
+        });
+
         mapView = (MapView) view.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         init();
@@ -104,7 +128,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
         @Override
         public void run() {
             setPosition(latitude, longitude);
-            ToastUtils.continuousToast(getContext(),"定位成功");
+            ToastUtils.continuousToast(getContext(), "定位成功");
         }
     };
 
@@ -122,15 +146,18 @@ public class TabFragment3 extends Fragment implements LocationSource,
      */
     private void setUpMap() {
         // 自定义系统定位小蓝点
-        AMapLocationClient.updatePrivacyAgree(getContext(),true);
-        AMapLocationClient.updatePrivacyShow(getContext(),true,true);
+        AMapLocationClient.updatePrivacyAgree(getContext(), true);
+        AMapLocationClient.updatePrivacyShow(getContext(), true, true);
         MyLocationStyle myLocationStyle = new MyLocationStyle();
+//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
+        //myLocationStyle.interval(2000);//设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory
                 .fromResource(R.mipmap.location_marker));// 设置小蓝点的图标
         myLocationStyle.strokeColor(Color.BLACK);// 设置圆形的边框颜色
         myLocationStyle.radiusFillColor(Color.argb(100, 0, 0, 180));// 设置圆形的填充颜色
-        // myLocationStyle.anchor(int,int)//设置小蓝点的锚点
+//        myLocationStyle.anchor(0.5f,0.5f);//设置小蓝点的锚点
         myLocationStyle.strokeWidth(1.0f);// 设置圆形的边框粗细
+        myLocationStyle.showMyLocation(true);
         aMap.setMyLocationStyle(myLocationStyle);
         aMap.setLocationSource(this);// 设置定位监听,触发activate?
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
@@ -138,7 +165,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
         aMap.getUiSettings().setZoomControlsEnabled(false);
         // 去除定位按钮
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
-        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+        aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false
         // aMap.setMyLocationType()
     }
 
@@ -171,13 +198,14 @@ public class TabFragment3 extends Fragment implements LocationSource,
      */
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
+        Log.d(TAG, "onLocationChanged: ");
         if (mListener != null && amapLocation != null) {
             if (amapLocation.getErrorCode() == 0) {
                 this.amapLocation = amapLocation;
-                //mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
                 //Log.d("1111", amapLocation.toString());
             } else {
-                String errText = "定位失败," + amapLocation.getErrorCode()+ ": " + amapLocation.getErrorInfo();
+                String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
                 //Log.e("1111",errText);
             }
         }
@@ -291,8 +319,12 @@ public class TabFragment3 extends Fragment implements LocationSource,
     }
 
 
-    private void setPosition(double latitude,double longitude) {
-        CoordinateConverter converter  = new CoordinateConverter(getContext());
+    private void setPosition(double latitude, double longitude) {
+        if (latitude == -1 || longitude == -1) {
+            ToastUtils.customToast(getContext(), "等待设备连接，请稍后");
+            return;
+        }
+        CoordinateConverter converter = new CoordinateConverter(getContext());
 // CoordType.GPS 待转换坐标类型
         converter.from(CoordinateConverter.CoordType.GPS);
 // sourceLatLng待转换坐标点 LatLng类型
@@ -303,11 +335,16 @@ public class TabFragment3 extends Fragment implements LocationSource,
             DPoint dPoint = converter.convert();
             // 创建经纬度对象
             // 在指定的经纬度位置添加标记
-            aMap.removecache();
+            if (marker != null) {
+                marker.remove();
+            }
             MarkerOptions markerOptions = new MarkerOptions()
-                    .position(new LatLng(dPoint.getLatitude(),dPoint.getLongitude()))
+                    .position(new LatLng(dPoint.getLatitude(), dPoint.getLongitude()))
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.dog_icon)); // 设置自定义图标资源;
-            aMap.addMarker(markerOptions);
+            marker = aMap.addMarker(markerOptions);
+            // for (Marker marker : aMap.getMapScreenMarkers()) {
+            //    marker.remove();
+            // }
             // 将地图视图移动到指定的经纬度位置
             aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15)); // 设置缩放级别为 15
         } catch (Exception e) {

@@ -197,7 +197,7 @@ public class TabFragment1 extends Fragment {
         TextView tv_act = view.findViewById(R.id.tv_act);
         TextView tv_breath = view.findViewById(R.id.tv_breath);
         TextView tv_heart = view.findViewById(R.id.tv_heart);
-        ImageView iv_sleep = view.findViewById(R.id.iv_sleep);
+        ImageView iv_sleep = view.findViewById(R.id.iv_act);
 
         double maxXValue = DataUtils.extractXYZ(mExtendParamDesc);
         String petPosture = "未知";
