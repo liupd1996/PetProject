@@ -8,8 +8,10 @@
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_orange_corner_20dp.xml" value="0.1905" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_pink_corner_20dp.xml" value="0.1905" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_purple_corner_20dp.xml" value="0.1905" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_red_corner_20dp.xml" value="0.2755" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_white_corner_20dp.xml" value="0.2055" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_white_corner_4dp.xml" value="0.2055" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bk_gradient.xml" value="0.2755" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_main_color.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_selector.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_un_clickable.xml" value="0.1535" />
@@ -23,12 +25,17 @@
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/myoval.xml" value="0.1905" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/tab_selector.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/title_icon_back_rtl.xml" value="0.3225" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_bind.xml" value="0.2463768115942029" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_data.xml" value="0.2694746376811594" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_device.xml" value="0.2708333333333333" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_device_info.xml" value="0.22135416666666666" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_login.xml" value="0.20199275362318841" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_main.xml" value="0.20199275362318841" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_map.xml" value="0.2546875" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_pet.xml" value="0.2708333333333333" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_setting.xml" value="0.2694746376811594" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_user_center.xml" value="0.2546875" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/device_item.xml" value="0.2463768115942029" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab1.xml" value="0.20199275362318841" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab2.xml" value="0.20199275362318841" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab3.xml" value="0.20199275362318841" />

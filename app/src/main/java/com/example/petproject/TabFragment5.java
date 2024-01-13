@@ -35,9 +35,20 @@ public class TabFragment5 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tab5, container, false);
+        LinearLayout ll_device = view.findViewById(R.id.ll_device);
+        ll_device.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), DeviceActivity.class);
+            startActivity(intent);
+        });
+        LinearLayout ll_pet = view.findViewById(R.id.ll_pet);
+        ll_pet.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), PetActivity.class);
+            startActivity(intent);
+        });
+
         LinearLayout ll_setting = view.findViewById(R.id.ll_setting);
         ll_setting.setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(),SettingActivity.class);
+            Intent intent = new Intent(getActivity(), SettingActivity.class);
             startActivity(intent);
         });
         return view;

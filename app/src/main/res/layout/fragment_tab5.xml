@@ -64,6 +64,7 @@
 
 
   <LinearLayout
+      android:id="@+id/ll_device"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="20dp">
@@ -100,6 +101,7 @@
   </LinearLayout>
 
   <LinearLayout
+      android:id="@+id/ll_pet"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content">
     <ImageView

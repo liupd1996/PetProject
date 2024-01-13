@@ -19,9 +19,10 @@ public class SettingActivity extends BaseActivity {
         button.setOnClickListener(v -> {
             onBackPressed();
         });
-        button.setImageTintList(ColorStateList.valueOf(Color.WHITE));
+        //button.setImageTintList(ColorStateList.valueOf(Color.WHITE));
         TextView title = findViewById(R.id.tv_bar_title);
-        title.setText("设置");
+        title.setTextColor(Color.BLACK);
+        title.setText("系统设置");
 
         findViewById(R.id.btn_exit).setOnClickListener(v -> {
             ConfigPreferences.setLoginName(this, "");

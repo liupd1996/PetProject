@@ -132,18 +132,6 @@ public class LoginActivity extends BaseActivity {
     }
 
 
-    private void start() {
-        //Intent intent = getPackageManager().getLaunchIntentForPackage("com.zte.appstore.ui");//根据intent是否为空来判断是否安装应用
-        try {
-            Intent intent = new Intent();
-            intent.setAction("com.appstore.manager.login.action");
-            intent.setPackage("com.zte.appstore.ui");
-            startActivityForResult(intent, 100);
-        } catch (ActivityNotFoundException exception) {
-            ToastUtils.customToast(this, "未找到指定应用");
-        }
-    }
-
     @Override
     public void onBackPressed() {
         try {
