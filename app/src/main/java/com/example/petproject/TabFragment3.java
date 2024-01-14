@@ -132,13 +132,22 @@ public class TabFragment3 extends Fragment implements LocationSource,
         }
     };
 
+    private Runnable mRunnable2 = new Runnable() {
+        @Override
+        public void run() {
+            startWebSocket();
+        }
+    };
+
     /**
      * 初始化AMap对象
      */
     private void init() {
         aMap = mapView.getMap();
         setUpMap();
-        startWebSocket();
+        //startWebSocket();
+        mHandler.removeCallbacks(mRunnable2);
+        mHandler.postDelayed(mRunnable2, 2000);//先显示定位蓝点后，再定位宠物
     }
 
     /**
@@ -149,7 +158,9 @@ public class TabFragment3 extends Fragment implements LocationSource,
         AMapLocationClient.updatePrivacyAgree(getContext(), true);
         AMapLocationClient.updatePrivacyShow(getContext(), true, true);
         MyLocationStyle myLocationStyle = new MyLocationStyle();
-//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
+        //myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);//定位一次，且将视角移动到地图中心点。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，并且蓝点会跟随设备移动。
+
         //myLocationStyle.interval(2000);//设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory
                 .fromResource(R.mipmap.location_marker));// 设置小蓝点的图标
@@ -159,7 +170,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
         myLocationStyle.strokeWidth(1.0f);// 设置圆形的边框粗细
         myLocationStyle.showMyLocation(true);
         aMap.setMyLocationStyle(myLocationStyle);
-        aMap.setLocationSource(this);// 设置定位监听,触发activate?
+        aMap.setLocationSource(this);// aMap.setLocationSource(this)中包含两个回调，activate(OnLocationChangedListener)和deactivate()。
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
         // 去除缩放按钮
         aMap.getUiSettings().setZoomControlsEnabled(false);
@@ -185,6 +196,9 @@ public class TabFragment3 extends Fragment implements LocationSource,
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+        if(null != mlocationClient){
+            mlocationClient.onDestroy();
+        }
     }
 
     @Override
@@ -216,6 +230,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
      */
     @Override
     public void activate(OnLocationChangedListener listener) {
+        Log.d(TAG, "activate: ");
         mListener = listener;
         if (mlocationClient == null) {
 
