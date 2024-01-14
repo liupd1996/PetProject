@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import com.example.petproject.bean.RemoteResult;
 import com.example.petproject.customview.CircularImageView;
 import com.example.petproject.dialog.AvatorFragment;
 import com.example.petproject.dialog.PetTypeBottomSheetFragment;
+import com.example.petproject.dialog.SureCancelDialog;
 import com.example.petproject.retrofit.ResultFunction;
 import com.example.petproject.retrofit.RetrofitUtils;
 import com.example.petproject.utils.ConfigPreferences;
@@ -46,16 +48,56 @@ public class AddPetActivity extends BaseActivity {
     private PetTypeBottomSheetFragment fragmentGender;
     private PetTypeBottomSheetFragment fragmentCut;
     private PetTypeBottomSheetFragment fragmentVaccine;
+    private String name = "";
+    private String weight = "";
     private int indexType = 0;
     private int indexGender = 0;
     private int indexCut = 0;
     private int indexVaccine = 0;
     private String selectedDate = "";
     private String base64Avator = "";
+    private String id;
+    private int breed;
+    private SureCancelDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDialog = SureCancelDialog.newInstance("是否删除宠物", "取消", "确定");
+        mDialog.setOnCancelListener(new SureCancelDialog.OnSureCancelListener() {
+            @Override
+            public void onCancel() {
+                mDialog.dismiss();
+            }
+
+            @Override
+            public void onSureListener(String text) {
+                String token = "Bearer " + ConfigPreferences.login_token(AddPetActivity.this);
+                petDelete(token);
+            }
+        });
+        Intent intent = getIntent();
+        if (intent != null) {
+            PetRequest petRequest = (PetRequest) intent.getParcelableExtra("bean");
+            Log.d(TAG, "petRequest: " + petRequest);
+            if (petRequest != null) {
+                name = petRequest.name;
+                weight = petRequest.weight;
+                indexType = petRequest.type;
+                indexGender = petRequest.gender;
+                indexCut = petRequest.isSpayed;
+                indexVaccine = petRequest.isVaccinated;
+                selectedDate = petRequest.birth;
+                base64Avator = petRequest.avatar;
+                id = petRequest.id;
+                breed = petRequest.breed;
+                // 在这里使用 petRequest 对象
+                findViewById(R.id.iv_delete).setVisibility(View.VISIBLE);
+                findViewById(R.id.iv_delete).setOnClickListener(view -> {
+                    mDialog.show(getSupportFragmentManager(), "delete");
+                });
+            }
+        }
         initDialogFragment();
 //        findViewById(R.id.cl_bar_back).setBackgroundColor(Color.parseColor("#FFC0CB"));
         findViewById(R.id.cl_birth).setOnClickListener(view -> {
@@ -74,14 +116,35 @@ public class AddPetActivity extends BaseActivity {
             fragmentVaccine.show(getSupportFragmentManager(), fragmentVaccine.getTag());
         });
         TextView tv_type = findViewById(R.id.tv_type);
-        tv_type.setText("猫猫");
+        if (indexType == 0) {
+            tv_type.setText("猫猫");
+        } else {
+            tv_type.setText("狗狗");
+        }
         TextView tv_gender = findViewById(R.id.tv_gender);
-        tv_gender.setText("男生");
+        if (indexGender == 0) {
+            tv_gender.setText("男生");
+        } else {
+            tv_gender.setText("女生");
+        }
         TextView tv_cut = findViewById(R.id.tv_cut);
-        tv_cut.setText("是");
+        if (indexType == 0) {
+            tv_cut.setText("是");
+        } else {
+            tv_cut.setText("否");
+        }
         TextView tv_vaccine = findViewById(R.id.tv_vaccine);
-        tv_vaccine.setText("是");
-
+        if (indexType == 0) {
+            tv_vaccine.setText("是");
+        } else {
+            tv_vaccine.setText("否");
+        }
+        TextView tv_birth = findViewById(R.id.tv_birth);
+        tv_birth.setText(selectedDate);
+        EditText et_name = findViewById(R.id.et_name);
+        et_name.setText(name);
+        EditText et_weight = findViewById(R.id.et_weight);
+        et_weight.setText(weight);
         ImageButton button = findViewById(R.id.iv_back);
         button.setOnClickListener(v -> {
             onBackPressed();
@@ -95,13 +158,11 @@ public class AddPetActivity extends BaseActivity {
             }
         });
         findViewById(R.id.btn_save).setOnClickListener(view -> {
-            EditText et_name = findViewById(R.id.et_name);
             String name = et_name.getText().toString();
             if (TextUtils.isEmpty(name)) {
                 ToastUtils.customToast(AddPetActivity.this,"请输入宠物名字");
                 return;
             }
-            EditText et_weight = findViewById(R.id.et_weight);
             String weight = et_weight.getText().toString();
             if (TextUtils.isEmpty(weight)) {
                 ToastUtils.customToast(AddPetActivity.this,"请输入宠物体重");
@@ -109,7 +170,7 @@ public class AddPetActivity extends BaseActivity {
             }
             String token = "Bearer " + ConfigPreferences.login_token(AddPetActivity.this);
             PetRequest request = new PetRequest(base64Avator, selectedDate
-                    , indexGender, indexCut, indexVaccine, name, indexType, weight);
+                    ,breed, indexGender, id, indexCut, indexVaccine, name, indexType, weight);
             petInsert(token, request);
         });
     }
@@ -128,8 +189,7 @@ public class AddPetActivity extends BaseActivity {
 
     private void petInsert(String token, PetRequest request) {
         RetrofitUtils.getRetrofitService().petInsert(token,request)
-                .filter(new ResultFunction())
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())//todo add edit
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<RemoteResult<Object>>() {
                     @Override
@@ -138,7 +198,37 @@ public class AddPetActivity extends BaseActivity {
 
                     @Override
                     public void onNext(@NonNull RemoteResult<Object> result) {
+                        ToastUtils.customToast(AddPetActivity.this, "添加成功");
+                        Intent intent = new Intent(AddPetActivity.this, PetActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
 
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        ToastUtils.customToast(AddPetActivity.this, ExceptionHandle.handleException(e).message);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
+    private void petDelete(String token) {
+        RetrofitUtils.getRetrofitService().petDelete(token, id)
+                .subscribeOn(Schedulers.io())//todo add edit
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RemoteResult<Object>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(@NonNull RemoteResult<Object> result) {
+                        ToastUtils.customToast(AddPetActivity.this, "删除成功");
+                        Intent intent = new Intent(AddPetActivity.this, PetActivity.class);
+                        startActivity(intent);
                     }
 
                     @Override
@@ -262,7 +352,7 @@ public class AddPetActivity extends BaseActivity {
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
-                Bitmap compressedBitmap = Bitmap.createScaledBitmap(imageBitmap, 200, 200, true);
+                Bitmap compressedBitmap = Bitmap.createScaledBitmap(imageBitmap, 64, 64, true);
                 base64Avator = Utils.bitmapToBase64(compressedBitmap);
                 imageView.setImageBitmap(imageBitmap);
             } else if (requestCode == REQUEST_IMAGE_PICK) {
@@ -274,7 +364,7 @@ public class AddPetActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 // 将图像转换为Base64字符串
-                Bitmap compressedBitmap = Bitmap.createScaledBitmap(imageBitmap, 200, 200, true);
+                Bitmap compressedBitmap = Bitmap.createScaledBitmap(imageBitmap, 64, 64, true);
                 base64Avator = Utils.bitmapToBase64(compressedBitmap);
                 imageView.setImageURI(selectedImageUri);
             }

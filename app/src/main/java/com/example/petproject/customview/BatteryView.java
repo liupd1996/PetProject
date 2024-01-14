@@ -79,6 +79,9 @@ public class BatteryView extends View {
 
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.GREEN);
+        if (batteryLevel <=0) {
+            return;
+        }
         // 计算电量所占的比例
         int batteryLevelWidth = (int) (((float) batteryLevel / 100) * (mWidth - 15));
         // 画电量部分

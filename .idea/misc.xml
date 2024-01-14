@@ -11,6 +11,7 @@
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_red_corner_20dp.xml" value="0.2755" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_white_corner_20dp.xml" value="0.2055" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_white_corner_4dp.xml" value="0.2055" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_white_corner_8dp.xml" value="0.229" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bk_gradient.xml" value="0.2755" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_main_color.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_selector.xml" value="0.1535" />
@@ -39,6 +40,7 @@
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/avator_select.xml" value="0.2563405797101449" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/bottom_sheet_pet_type.xml" value="0.2563405797101449" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/device_item.xml" value="0.2463768115942029" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/dialog_sure_cancel.xml" value="0.22760416666666666" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab1.xml" value="0.20199275362318841" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab2.xml" value="0.20199275362318841" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab3.xml" value="0.20199275362318841" />
@@ -47,6 +49,7 @@
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/header_bar.xml" value="0.4661458333333333" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/layout_toast.xml" value="0.4661458333333333" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/myoval.xml" value="0.2694746376811594" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/pet_item.xml" value="0.2563405797101449" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/scroll_item.xml" value="0.2694746376811594" />
       </map>
     </option>

@@ -21,7 +21,7 @@
             android:id="@+id/avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/keji"
+            android:src="@drawable/dog_default"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="30dp"
@@ -45,6 +45,7 @@
             android:layout_marginStart="5dp"/>
 
         <TextView
+            android:id="@+id/tv_birth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/name"

@@ -6,8 +6,11 @@ import com.example.petproject.bean.PetRequest;
 import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -42,8 +45,11 @@ public interface RetrofitService {
     @POST("/pet/insert")
     Observable<RemoteResult<Object>> petInsert(@Header("Authorization") String authorization, @Body PetRequest request);
 
+    @DELETE("/pet/delete/{petId}")
+    Observable<RemoteResult<Object>> petDelete(@Header("Authorization") String authorization, @Path("petId") String petId);
+
     @GET("/pet/searchByUser")
-    Observable<RemoteResult<Object>> petSearch(@Header("Authorization") String authorization);
+    Observable<RemoteResult<List<PetRequest>>> petSearch(@Header("Authorization") String authorization);
 
     @GET("https://www.pgyer.com/apiv2/app/install")
     Observable<InstallResponse> appInstall(@Query("_api_key") String apiKey,
