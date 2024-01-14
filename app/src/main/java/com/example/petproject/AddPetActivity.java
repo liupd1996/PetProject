@@ -1,33 +1,42 @@
 package com.example.petproject;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.example.petproject.base.BaseActivity;
-import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.PetRequest;
 import com.example.petproject.bean.RemoteResult;
+import com.example.petproject.customview.CircularImageView;
+import com.example.petproject.dialog.AvatorFragment;
 import com.example.petproject.dialog.PetTypeBottomSheetFragment;
 import com.example.petproject.retrofit.ResultFunction;
 import com.example.petproject.retrofit.RetrofitUtils;
 import com.example.petproject.utils.ConfigPreferences;
 import com.example.petproject.utils.ExceptionHandle;
 import com.example.petproject.utils.ToastUtils;
+import com.example.petproject.utils.Utils;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -42,6 +51,7 @@ public class AddPetActivity extends BaseActivity {
     private int indexCut = 0;
     private int indexVaccine = 0;
     private String selectedDate = "";
+    private String base64Avator = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +88,12 @@ public class AddPetActivity extends BaseActivity {
         });
         TextView title = findViewById(R.id.tv_bar_title);
         title.setText("添加宠物");
-
+        imageView = findViewById(R.id.pet_avator);
+        imageView.setOnClickListener(view -> {
+            if (checkPermission()) {
+                showBottomSheet();
+            }
+        });
         findViewById(R.id.btn_save).setOnClickListener(view -> {
             EditText et_name = findViewById(R.id.et_name);
             String name = et_name.getText().toString();
@@ -93,11 +108,22 @@ public class AddPetActivity extends BaseActivity {
                 return;
             }
             String token = "Bearer " + ConfigPreferences.login_token(AddPetActivity.this);
-            Log.d(TAG, "token1111: " + token);
-            PetRequest request = new PetRequest("",selectedDate
-                    ,indexGender,indexCut,indexVaccine,name,indexType,weight);
+            PetRequest request = new PetRequest(base64Avator, selectedDate
+                    , indexGender, indexCut, indexVaccine, name, indexType, weight);
             petInsert(token, request);
         });
+    }
+
+    public String[] permissions = new String[]{Manifest.permission.CAMERA};
+
+    private boolean checkPermission() {
+        for (int i = 0; i < permissions.length; i++) {
+            if (ContextCompat.checkSelfPermission(this, permissions[i]) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, permissions, 1);
+                return false;
+            }
+        }
+        return true;
     }
 
     private void petInsert(String token, PetRequest request) {
@@ -181,7 +207,8 @@ public class AddPetActivity extends BaseActivity {
                 this,
                 (view, selectedYear, monthOfYear, dayOfMonth) -> {
                     // 处理选择的日期
-                    selectedDate = selectedYear + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                    //selectedDate = selectedYear + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                    selectedDate = Utils.formatDate(selectedYear, monthOfYear, dayOfMonth);
                     Log.d(TAG, "onDateSet: " + selectedDate);
                     TextView tv_birth = findViewById(R.id.tv_birth);
                     tv_birth.setText(selectedDate);
@@ -193,5 +220,64 @@ public class AddPetActivity extends BaseActivity {
 
         // 显示日期选择对话框
         datePickerDialog.show();
+    }
+
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_PICK = 2;
+    private CircularImageView imageView;
+
+    private void showBottomSheet() {
+        AvatorFragment fragment = new AvatorFragment();
+        fragment.setOnItemSelectedListener(index -> {
+            Log.d(TAG, "showBottomSheet: " + index);
+            if (index == 0) {
+                dispatchTakePictureIntent();
+            } else {
+                dispatchPickPictureIntent();
+            }
+        });
+        fragment.show(getSupportFragmentManager(), fragment.getTag());
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        } else {
+            ToastUtils.customToast(AddPetActivity.this,"未找到相机应用");
+        }
+    }
+
+    private void dispatchPickPictureIntent() {
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setType("image/*");
+        startActivityForResult(pickIntent, REQUEST_IMAGE_PICK);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                Bundle extras = data.getExtras();
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                Bitmap compressedBitmap = Bitmap.createScaledBitmap(imageBitmap, 200, 200, true);
+                base64Avator = Utils.bitmapToBase64(compressedBitmap);
+                imageView.setImageBitmap(imageBitmap);
+            } else if (requestCode == REQUEST_IMAGE_PICK) {
+                Uri selectedImageUri = data.getData();
+                Bitmap imageBitmap = null;
+                try {
+                    imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                // 将图像转换为Base64字符串
+                Bitmap compressedBitmap = Bitmap.createScaledBitmap(imageBitmap, 200, 200, true);
+                base64Avator = Utils.bitmapToBase64(compressedBitmap);
+                imageView.setImageURI(selectedImageUri);
+            }
+        }
     }
 }

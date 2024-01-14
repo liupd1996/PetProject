@@ -177,6 +177,7 @@ public class MainActivity extends BaseActivity {
             , Manifest.permission.ACCESS_FINE_LOCATION
             ,Manifest.permission.ACCESS_COARSE_LOCATION
             ,Manifest.permission.ACCESS_NETWORK_STATE
+            ,Manifest.permission.CAMERA
             };
 
     private boolean checkPermission() {

@@ -103,7 +103,8 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void onNext(@NonNull LoginResponse result) {
                         ConfigPreferences.setLoginName(LoginActivity.this, userName);
-                        ConfigPreferences.setLoginToken(LoginActivity.this, result.refresh_token);
+                        ConfigPreferences.setLoginToken(LoginActivity.this, result.access_token);
+                        ConfigPreferences.setRefreshToken(LoginActivity.this, result.refresh_token);
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         mTimeCount.onFinish();
                         finish();

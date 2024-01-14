@@ -20,7 +20,6 @@ import retrofit2.http.Query;
 public interface RetrofitService {
 
 
-
     @GET("/msm/send/{phone}")
     Observable<RemoteResult<Object>> getVerify(@Path("phone") String phone);
 
@@ -30,21 +29,20 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("/oauth/token")
     Observable<LoginResponse> login(@Field("phone") String username,
-                                                  @Field("smsCode") String password,
-                                                  @Field("grant_type") String grantType,
-                                                   @Field("client_id") String client_id,
-                                                  @Field("scope")  String scope,
-                                                  @Field("client_secret") String client_secret);
-
+                                    @Field("smsCode") String password,
+                                    @Field("grant_type") String grantType,
+                                    @Field("client_id") String client_id,
+                                    @Field("scope") String scope,
+                                    @Field("client_secret") String client_secret);
 
 
     @POST("/user/register")
     Observable<RemoteResult<Object>> register(@Body RegisterRequest request);
 
     @POST("/pet/insert")
-    Observable<RemoteResult<Object>> petInsert(@Header("Authorization") String authorization,@Body PetRequest request);
+    Observable<RemoteResult<Object>> petInsert(@Header("Authorization") String authorization, @Body PetRequest request);
 
-    @POST("/pet/searchByUser")
+    @GET("/pet/searchByUser")
     Observable<RemoteResult<Object>> petSearch(@Header("Authorization") String authorization);
 
     @GET("https://www.pgyer.com/apiv2/app/install")
