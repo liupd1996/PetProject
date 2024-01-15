@@ -41,7 +41,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="10dp"
-                android:hint="请输入六位设备号"
+                android:hint="请输入十一位设备号"
                 android:inputType="number"
                 android:textColor="@color/black"
                 android:textSize="14sp"
@@ -50,7 +50,7 @@
                 android:paddingBottom="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:maxLength="6"
+                android:maxLength="11"
                 android:background="@null"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

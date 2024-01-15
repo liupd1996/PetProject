@@ -9,22 +9,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.example.petproject.R;
+import com.example.petproject.bean.DeviceRequest;
 
 import java.util.List;
 
 public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder> {
     private static final String TAG = "EncodeHistoryAdapter";
     private Context mContext;
-    private List<DeviceItem> mList;
+    private List<DeviceRequest> mList;
     private ItemClickListener mItemClickListener;
 
     public DeviceAdapter(Context mContext) {
         this.mContext = mContext;
     }
 
-    public void setList(List<DeviceItem> list) {
+    public void setList(List<DeviceRequest> list) {
         this.mList = list;
         notifyDataSetChanged();
     }
@@ -40,17 +40,17 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        DeviceItem DeviceItem = mList.get(position);
-        if (DeviceItem == null) {
+        DeviceRequest request = mList.get(position);
+        if (request == null) {
             return;
         }
-        holder.title.setText(DeviceItem.deviceNum);
+        holder.tv_num.setText(request.deviceName);
         //SimpleDateFormat formatter = new SimpleDateFormat("扫描时间: yyyy-MM-dd HH:mm", Locale.CHINA);
         //String dateString = formatter.format(new Date(dataBean.getTime()));
-        holder.time.setText(DeviceItem.time);
+        //holder.time.setText(request.);
         holder.itemView.setOnClickListener(v -> {
             if (mItemClickListener != null) {
-                mItemClickListener.onItemClick(DeviceItem, position);
+                mItemClickListener.onItemClick(request, position);
             }
         });
     }
@@ -63,18 +63,18 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
         View itemView;
         TextView title;
-        TextView time;
+        TextView tv_num;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.itemView = itemView;
             title = itemView.findViewById(R.id.tv_title);
-            //time = itemView.findViewById(R.id.tv_time);
+            tv_num = itemView.findViewById(R.id.tv_num);
         }
     }
 
     public interface ItemClickListener {
-        void onItemClick(DeviceItem bean, int position);
+        void onItemClick(DeviceRequest bean, int position);
     }
 
     public void setOnItemClickListener(ItemClickListener itemClickListener) {

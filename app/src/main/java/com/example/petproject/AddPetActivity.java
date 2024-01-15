@@ -189,6 +189,7 @@ public class AddPetActivity extends BaseActivity {
 
     private void petInsert(String token, PetRequest request) {
         RetrofitUtils.getRetrofitService().petInsert(token,request)
+                .filter(new ResultFunction())
                 .subscribeOn(Schedulers.io())//todo add edit
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<RemoteResult<Object>>() {
@@ -217,6 +218,7 @@ public class AddPetActivity extends BaseActivity {
 
     private void petDelete(String token) {
         RetrofitUtils.getRetrofitService().petDelete(token, id)
+                .filter(new ResultFunction())
                 .subscribeOn(Schedulers.io())//todo add edit
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<RemoteResult<Object>>() {

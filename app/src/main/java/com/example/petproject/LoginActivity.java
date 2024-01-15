@@ -146,6 +146,7 @@ public class LoginActivity extends BaseActivity {
     }
     private void getVerify(String phone) {
         RetrofitUtils.getRetrofitService().getVerify(phone)
+                .filter(new ResultFunction())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<RemoteResult<Object>>() {

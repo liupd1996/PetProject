@@ -13,6 +13,7 @@ import com.example.petproject.adapter.PetAdapter;
 import com.example.petproject.base.BaseActivity;
 import com.example.petproject.bean.PetRequest;
 import com.example.petproject.bean.RemoteResult;
+import com.example.petproject.retrofit.ResultFunction;
 import com.example.petproject.retrofit.RetrofitUtils;
 import com.example.petproject.utils.ConfigPreferences;
 import com.example.petproject.utils.ExceptionHandle;
@@ -75,6 +76,7 @@ public class PetActivity extends BaseActivity {
 
     private void search(String token) {
         RetrofitUtils.getRetrofitService().petSearch(token)
+                .filter(new ResultFunction())
                 .subscribeOn(Schedulers.io())//todo filter
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<RemoteResult<List<PetRequest>>>() {
