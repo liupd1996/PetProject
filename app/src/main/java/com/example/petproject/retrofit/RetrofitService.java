@@ -1,6 +1,8 @@
 package com.example.petproject.retrofit;
 
+import com.example.petproject.bean.DeleteDeviceRequest;
 import com.example.petproject.bean.DeviceRequest;
+import com.example.petproject.bean.DeviceResponse;
 import com.example.petproject.bean.InstallResponse;
 import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.PetRequest;
@@ -52,14 +54,18 @@ public interface RetrofitService {
     @GET("/pet/searchByUser")
     Observable<RemoteResult<List<PetRequest>>> petSearch(@Header("Authorization") String authorization);
 
+
+
+
+
     @GET("/deviceOpr/searchDeviceDetail")
-    Observable<RemoteResult<List<DeviceRequest>>> deviceSearch(@Header("Authorization") String authorization);
+    Observable<RemoteResult<List<DeviceResponse>>> deviceSearch(@Header("Authorization") String authorization);
 
     @POST("/deviceOpr/bindUser")
     Observable<RemoteResult<Object>> addDevice(@Header("Authorization") String authorization, @Body DeviceRequest request);
 
-    @DELETE("/deviceManagement/delete/{id}")
-    Observable<RemoteResult<Object>> deleteDevice(@Header("Authorization") String authorization, @Path("id") String id);
+    @POST("/deviceOpr/removeUser")
+    Observable<RemoteResult<Object>> deleteDevice(@Header("Authorization") String authorization, @Body DeleteDeviceRequest request);
 
     @GET("https://www.pgyer.com/apiv2/app/install")
     Observable<InstallResponse> appInstall(@Query("_api_key") String apiKey,

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.petproject.adapter.DeviceAdapter;
 import com.example.petproject.base.BaseActivity;
-import com.example.petproject.bean.DeviceRequest;
+import com.example.petproject.bean.DeviceResponse;
 import com.example.petproject.bean.RemoteResult;
 import com.example.petproject.retrofit.ResultFunction;
 import com.example.petproject.retrofit.RetrofitUtils;
@@ -30,7 +30,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class DeviceActivity extends BaseActivity {
     private RecyclerView mRecyclerView;
-    private List<DeviceRequest> list;
+    private List<DeviceResponse> list;
     private DeviceAdapter mAdapter;
     private String id;
 
@@ -46,6 +46,10 @@ public class DeviceActivity extends BaseActivity {
         title.setText("绑定设备");
 
         findViewById(R.id.btn_bind).setOnClickListener(view -> {
+            Intent intent = new Intent(DeviceActivity.this, BindActivity.class);
+            startActivity(intent);
+        });
+        findViewById(R.id.btn_bind2).setOnClickListener(view -> {
             Intent intent = new Intent(DeviceActivity.this, BindActivity.class);
             startActivity(intent);
         });
@@ -73,13 +77,13 @@ public class DeviceActivity extends BaseActivity {
                 .filter(new ResultFunction())
                 .subscribeOn(Schedulers.io())//todo filter
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<RemoteResult<List<DeviceRequest>>>() {
+                .subscribe(new Observer<RemoteResult<List<DeviceResponse>>>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                     }
 
                     @Override
-                    public void onNext(@NonNull RemoteResult<List<DeviceRequest>> result) {
+                    public void onNext(@NonNull RemoteResult<List<DeviceResponse>> result) {
                         list = result.data;
                         if (list != null && list.size() != 0) {
                             mAdapter.setList(result.data);

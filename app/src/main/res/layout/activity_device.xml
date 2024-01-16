@@ -17,7 +17,8 @@
         android:layout_height="match_parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_title_bar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintStart_toEndOf="parent">
+        app:layout_constraintStart_toEndOf="parent"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_no_pet"
@@ -78,6 +79,7 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <Button
+            android:id="@+id/btn_bind2"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/bg_red_corner_10dp"

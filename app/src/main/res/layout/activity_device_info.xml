@@ -21,24 +21,63 @@
         app:layout_constraintStart_toStartOf="parent"
         android:background="@drawable/bg_white_corner_20dp">
 
-        <TextView
-            android:id="@+id/tv_close"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_title"
-            android:layout_marginEnd="20dp"
-            android:text="关闭设备"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="#d81e06"/>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/close_device"
-            app:layout_constraintTop_toTopOf="@id/tv_close"
-            app:layout_constraintBottom_toBottomOf="@id/tv_close"
-            app:layout_constraintEnd_toStartOf="@+id/tv_close"/>
+            android:layout_marginEnd="20dp">
+            <TextView
+                android:id="@+id/tv_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="20dp"
+                android:text="删除设备"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#8a8a8a"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/delete"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_close"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cl_delete"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp">
+            <TextView
+                android:id="@+id/tv_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="20dp"
+                android:text="关闭设备"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#d81e06"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/close_device"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_delete"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <com.example.petproject.customview.CircularImageView
             android:id="@+id/iv_device"
@@ -126,7 +165,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintWidth_percent="0.45"
-            android:text="解绑设备" />
+            android:text="解绑宠物" />
 
         <Button
             android:layout_width="0dp"

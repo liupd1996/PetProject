@@ -187,7 +187,7 @@ public class AddPetActivity extends BaseActivity {
         return true;
     }
 
-    private void petInsert(String token, PetRequest request) {
+    private void petInsert(String token, PetRequest request) {//todo pet update
         RetrofitUtils.getRetrofitService().petInsert(token,request)
                 .filter(new ResultFunction())
                 .subscribeOn(Schedulers.io())//todo add edit

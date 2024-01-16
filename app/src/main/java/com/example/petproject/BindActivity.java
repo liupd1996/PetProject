@@ -3,14 +3,12 @@ package com.example.petproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.petproject.base.BaseActivity;
 import com.example.petproject.bean.DeviceRequest;
-import com.example.petproject.bean.PetRequest;
 import com.example.petproject.bean.RemoteResult;
 import com.example.petproject.retrofit.ResultFunction;
 import com.example.petproject.retrofit.RetrofitUtils;
@@ -44,7 +42,7 @@ public class BindActivity extends BaseActivity {
             } else {
                 try {
                     //todo check String or int
-                    DeviceRequest request = new DeviceRequest(device_id);//10069096400
+                    DeviceRequest request = new DeviceRequest(device_id);//10069096400 / todo 10069096996
                     String token = "Bearer " + ConfigPreferences.login_token(BindActivity.this);
                     deviceAdd(token, request);
                     // 在这里使用 intValue

@@ -11,20 +11,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.petproject.R;
 import com.example.petproject.bean.DeviceRequest;
+import com.example.petproject.bean.DeviceResponse;
 
 import java.util.List;
 
 public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder> {
     private static final String TAG = "EncodeHistoryAdapter";
     private Context mContext;
-    private List<DeviceRequest> mList;
+    private List<DeviceResponse> mList;
     private ItemClickListener mItemClickListener;
 
     public DeviceAdapter(Context mContext) {
         this.mContext = mContext;
     }
 
-    public void setList(List<DeviceRequest> list) {
+    public void setList(List<DeviceResponse> list) {
         this.mList = list;
         notifyDataSetChanged();
     }
@@ -40,7 +41,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        DeviceRequest request = mList.get(position);
+        DeviceResponse request = mList.get(position);
         if (request == null) {
             return;
         }
@@ -74,7 +75,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
     }
 
     public interface ItemClickListener {
-        void onItemClick(DeviceRequest bean, int position);
+        void onItemClick(DeviceResponse bean, int position);
     }
 
     public void setOnItemClickListener(ItemClickListener itemClickListener) {
