@@ -8,8 +8,9 @@ public class RegisterRequest {
     String smsCode;
     String username;
 
-    public RegisterRequest(String avatar, String phone, String smsCode, String username) {
+    public RegisterRequest(String avatar, int gender, String phone, String smsCode, String username) {
         this.avatar = avatar;
+        this.gender = gender;
         this.phone = phone;
         this.smsCode = smsCode;
         this.username = username;

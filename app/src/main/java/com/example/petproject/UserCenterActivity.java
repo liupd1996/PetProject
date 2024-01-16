@@ -3,12 +3,15 @@ package com.example.petproject;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.petproject.base.BaseActivity;
 import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
+import com.example.petproject.dialog.PetTypeBottomSheetFragment;
 import com.example.petproject.retrofit.ResultFunction;
 import com.example.petproject.retrofit.RetrofitUtils;
 import com.example.petproject.utils.ConfigPreferences;
@@ -24,7 +27,9 @@ import io.reactivex.schedulers.Schedulers;
 public class UserCenterActivity extends BaseActivity {
     private static final String TAG = "UserCenterActivity";
     private TextView mTvGender;
-    private TextView mTvName;
+    private EditText mTvName;
+    private PetTypeBottomSheetFragment fragmentGender;
+    private int indexGender = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,21 +47,42 @@ public class UserCenterActivity extends BaseActivity {
         mTvGender = findViewById(R.id.tv_gender);
         TextView title = findViewById(R.id.tv_bar_title);
         title.setText("个人中心");
-        mTvName.setText("test");
+
+        fragmentGender = new PetTypeBottomSheetFragment();
+        String[] genders = {"男生", "女生"};
+        fragmentGender.setOptions(genders);
+        fragmentGender.setOnItemSelectedListener((selectedItem, index) -> {
+            indexGender = index;
+            mTvGender.setText(selectedItem);
+        });
+
         findViewById(R.id.cl_title_bar).setBackgroundColor(Color.WHITE);
         findViewById(R.id.iv_back).setOnClickListener(v -> {
             onBackPressed();
         });
+        findViewById(R.id.cl_gender).setOnClickListener(view -> {
+            fragmentGender.show(getSupportFragmentManager(), fragmentGender.getTag());
+        });
+
         findViewById(R.id.btn_register).setOnClickListener(v -> {
             Intent intent = getIntent();
             String phone = intent.getStringExtra("phone");
             String smsCode = intent.getStringExtra("smsCode");
-            register(phone,smsCode,"test");
+            String name = mTvName.getText().toString();
+            if (TextUtils.isEmpty(name)) {
+                ToastUtils.customToast(UserCenterActivity.this, "昵称不能为空");
+                return;
+            }
+            if (indexGender == -1) {
+                ToastUtils.customToast(UserCenterActivity.this, "请选择性别");
+                return;
+            }
+            register(indexGender,phone, smsCode, name);
         });
     }
 
-    private void register(String phone, String smsCode, String name) {
-        RetrofitUtils.getRetrofitService().register(new RegisterRequest("", phone, smsCode, name))
+    private void register(int gender, String phone, String smsCode, String name) {
+        RetrofitUtils.getRetrofitService().register(new RegisterRequest("", gender, phone, smsCode, name))
                 .filter(new ResultFunction())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -82,7 +108,7 @@ public class UserCenterActivity extends BaseActivity {
     }
 
     private void login(String userName, String verify) {
-        RetrofitUtils.getRetrofitService().login(userName, verify,"password","mydog","all","myDog")
+        RetrofitUtils.getRetrofitService().login(userName, verify, "password", "mydog", "all", "myDog")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<LoginResponse>() {

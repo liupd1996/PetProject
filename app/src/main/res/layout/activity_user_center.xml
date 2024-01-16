@@ -37,16 +37,19 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="40dp"/>
 
-    <TextView
+    <EditText
         android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@+id/tv_title_name"
         app:layout_constraintBottom_toBottomOf="@+id/tv_title_name"
+        app:layout_constraintStart_toEndOf="@+id/tv_title_name"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="28dp"
         android:textColor="#777777"
-        android:textSize="17sp"/>
+        android:textSize="17sp"
+        android:gravity="end|center_vertical"
+        android:background="@null"/>
 
     <View
         android:layout_width="match_parent"
@@ -83,6 +86,27 @@
         android:layout_marginEnd="28dp"
         android:textColor="#777777"
         android:textSize="17sp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_gender"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@+id/tv_gender"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_gender"
+        app:layout_constraintStart_toEndOf="@+id/tv_gender"
+        app:layout_constraintEnd_toEndOf="parent">
+        <ImageView
+            android:id="@+id/row"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/rightrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     <View
         android:layout_width="match_parent"

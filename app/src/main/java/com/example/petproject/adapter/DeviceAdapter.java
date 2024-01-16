@@ -1,6 +1,8 @@
 package com.example.petproject.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +51,13 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
         //SimpleDateFormat formatter = new SimpleDateFormat("扫描时间: yyyy-MM-dd HH:mm", Locale.CHINA);
         //String dateString = formatter.format(new Date(dataBean.getTime()));
         //holder.time.setText(request.);
+        if (TextUtils.isEmpty(request.petId)) {
+            holder.tv_bind_state.setText("未绑定");
+            holder.tv_bind_state.setTextColor(Color.RED);
+        } else {
+            holder.tv_bind_state.setText("已绑定");
+            holder.tv_bind_state.setTextColor(Color.GREEN);
+        }
         holder.itemView.setOnClickListener(v -> {
             if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(request, position);
@@ -65,12 +74,14 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
         View itemView;
         TextView title;
         TextView tv_num;
+        TextView tv_bind_state;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.itemView = itemView;
             title = itemView.findViewById(R.id.tv_title);
             tv_num = itemView.findViewById(R.id.tv_num);
+            tv_bind_state = itemView.findViewById(R.id.tv_bind_state);
         }
     }
 

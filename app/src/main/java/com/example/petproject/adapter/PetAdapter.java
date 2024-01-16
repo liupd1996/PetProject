@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.petproject.R;
-import com.example.petproject.bean.PetRequest;
+import com.example.petproject.bean.PetResponse;
 import com.example.petproject.customview.CircularImageView;
 import com.example.petproject.utils.Utils;
 
@@ -21,14 +21,14 @@ import java.util.List;
 public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
     private static final String TAG = "EncodeHistoryAdapter";
     private Context mContext;
-    private List<PetRequest> mList;
+    private List<PetResponse> mList;
     private ItemClickListener mItemClickListener;
 
     public PetAdapter(Context mContext) {
         this.mContext = mContext;
     }
 
-    public void setList(List<PetRequest> list) {
+    public void setList(List<PetResponse> list) {
         this.mList = list;
         notifyDataSetChanged();
     }
@@ -44,22 +44,22 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        PetRequest petRequest = mList.get(position);
-        if (petRequest == null) {
+        PetResponse petResponse = mList.get(position);
+        if (petResponse == null) {
             return;
         }
-        holder.name.setText(petRequest.name);
+        holder.name.setText(petResponse.name);
         //holder.time.setText(petRequest.birth);
-        if (petRequest.gender == 0) {
+        if (petResponse.gender == 0) {
             holder.gender.setBackgroundResource(R.drawable.man);
         } else {
             holder.gender.setBackgroundResource(R.drawable.woman);
         }
-        Bitmap bitmap = Utils.base64ToBitmap(petRequest.avatar);
+        Bitmap bitmap = Utils.base64ToBitmap(petResponse.avatar);
         if (bitmap != null) {
             holder.avatar.setImageBitmap(bitmap);
         } else {
-            if (petRequest.type == 0) {
+            if (petResponse.type == 0) {
                 holder.avatar.setImageResource(R.drawable.cat_default);
                 holder.time.setText("猫猫");
             } else {
@@ -69,7 +69,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
         }
         holder.itemView.setOnClickListener(v -> {
             if (mItemClickListener != null) {
-                mItemClickListener.onItemClick(petRequest, position);
+                mItemClickListener.onItemClick(petResponse, position);
             }
         });
     }
@@ -97,7 +97,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
     }
 
     public interface ItemClickListener {
-        void onItemClick(PetRequest bean, int position);
+        void onItemClick(PetResponse bean, int position);
     }
 
     public void setOnItemClickListener(ItemClickListener itemClickListener) {

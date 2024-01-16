@@ -3,7 +3,7 @@ package com.example.petproject.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class PetRequest implements Parcelable {
+public class PetResponse implements Parcelable {
     public String avatar;
     public String birth;
     public int breed;
@@ -14,8 +14,9 @@ public class PetRequest implements Parcelable {
     public String name;
     public int type;
     public String weight;
+    public String deviceId;
 
-    public PetRequest(String avatar, String birth, int breed, int gender, String id
+    public PetResponse(String avatar, String birth, int breed, int gender, String id
             , int isSpayed, int isVaccinated, String name, int type, String weight) {
         this.avatar = avatar;
         this.birth = birth;
@@ -41,6 +42,7 @@ public class PetRequest implements Parcelable {
         dest.writeString(name);
         dest.writeInt(type);
         dest.writeString(weight);
+        dest.writeString(deviceId);
     }
 
     // Parcelable 接口实现
@@ -50,20 +52,20 @@ public class PetRequest implements Parcelable {
     }
 
     // Parcelable 接口实现
-    public static final Parcelable.Creator<PetRequest> CREATOR = new Parcelable.Creator<PetRequest>() {
+    public static final Creator<PetResponse> CREATOR = new Creator<PetResponse>() {
         @Override
-        public PetRequest createFromParcel(Parcel in) {
-            return new PetRequest(in);
+        public PetResponse createFromParcel(Parcel in) {
+            return new PetResponse(in);
         }
 
         @Override
-        public PetRequest[] newArray(int size) {
-            return new PetRequest[size];
+        public PetResponse[] newArray(int size) {
+            return new PetResponse[size];
         }
     };
 
     // Parcelable 接口实现
-    private PetRequest(Parcel in) {
+    private PetResponse(Parcel in) {
         // 从 Parcel 读取数据
         avatar = in.readString();
         birth = in.readString();
@@ -75,5 +77,6 @@ public class PetRequest implements Parcelable {
         name = in.readString();
         type = in.readInt();
         weight = in.readString();
+        deviceId = in.readString();
     }
 }

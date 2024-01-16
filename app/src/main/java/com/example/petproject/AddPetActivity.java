@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.petproject.base.BaseActivity;
 import com.example.petproject.bean.PetRequest;
+import com.example.petproject.bean.PetResponse;
 import com.example.petproject.bean.RemoteResult;
 import com.example.petproject.customview.CircularImageView;
 import com.example.petproject.dialog.AvatorFragment;
@@ -59,6 +60,7 @@ public class AddPetActivity extends BaseActivity {
     private String id;
     private int breed;
     private SureCancelDialog mDialog;
+    private PetResponse petRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +80,7 @@ public class AddPetActivity extends BaseActivity {
         });
         Intent intent = getIntent();
         if (intent != null) {
-            PetRequest petRequest = (PetRequest) intent.getParcelableExtra("bean");
-            Log.d(TAG, "petRequest: " + petRequest);
+            petRequest = (PetResponse) intent.getParcelableExtra("bean");
             if (petRequest != null) {
                 name = petRequest.name;
                 weight = petRequest.weight;
@@ -87,7 +88,17 @@ public class AddPetActivity extends BaseActivity {
                 indexGender = petRequest.gender;
                 indexCut = petRequest.isSpayed;
                 indexVaccine = petRequest.isVaccinated;
-                selectedDate = petRequest.birth;
+                if (TextUtils.isEmpty(petRequest.birth)) {
+                    String[] parts = petRequest.birth.split("T");
+                    if (parts.length > 0) {
+                        selectedDate = parts[0];
+                    } else {
+                        selectedDate = "";
+                    }
+                } else {
+                    selectedDate = "";
+                }
+                //selectedDate = petRequest.birth;
                 base64Avator = petRequest.avatar;
                 id = petRequest.id;
                 breed = petRequest.breed;
@@ -171,7 +182,11 @@ public class AddPetActivity extends BaseActivity {
             String token = "Bearer " + ConfigPreferences.login_token(AddPetActivity.this);
             PetRequest request = new PetRequest(base64Avator, selectedDate
                     ,breed, indexGender, id, indexCut, indexVaccine, name, indexType, weight);
-            petInsert(token, request);
+            if (petRequest == null) {
+                petInsert(token, request);
+            } else {
+                petUpdate(token, request);
+            }
         });
     }
 
@@ -200,8 +215,55 @@ public class AddPetActivity extends BaseActivity {
                     @Override
                     public void onNext(@NonNull RemoteResult<Object> result) {
                         ToastUtils.customToast(AddPetActivity.this, "添加成功");
-                        Intent intent = new Intent(AddPetActivity.this, PetActivity.class);
-                        startActivity(intent);
+                        Intent intentResult = getIntent();
+                        int type = intentResult.getIntExtra("type", -1);
+                        if (type == 1) {
+                            Intent resultIntent = new Intent();
+                            setResult(RESULT_OK, resultIntent);
+                            finish();
+                        } else {
+                            Intent intent = new Intent(AddPetActivity.this, PetActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        ToastUtils.customToast(AddPetActivity.this, ExceptionHandle.handleException(e).message);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
+    private void petUpdate(String token, PetRequest request) {//todo pet update
+        RetrofitUtils.getRetrofitService().petUpdate(token,request)
+                .filter(new ResultFunction())
+                .subscribeOn(Schedulers.io())//todo add edit
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RemoteResult<Object>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(@NonNull RemoteResult<Object> result) {
+                        ToastUtils.customToast(AddPetActivity.this, "更新成功");
+                        Intent intentResult = getIntent();
+                        int type = intentResult.getIntExtra("type", -1);
+                        if (type == 1) {
+                            Intent resultIntent = new Intent();
+                            setResult(RESULT_OK, resultIntent);
+                            finish();
+                        } else {
+                            Intent intent = new Intent(AddPetActivity.this, PetActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
                         finish();
                     }
 
@@ -231,6 +293,7 @@ public class AddPetActivity extends BaseActivity {
                         ToastUtils.customToast(AddPetActivity.this, "删除成功");
                         Intent intent = new Intent(AddPetActivity.this, PetActivity.class);
                         startActivity(intent);
+                        finish();
                     }
 
                     @Override

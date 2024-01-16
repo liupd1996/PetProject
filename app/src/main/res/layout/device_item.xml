@@ -55,11 +55,22 @@
             android:layout_height="wrap_content"
             android:textColor="#00FF00"
             android:textSize="16sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_title"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_title"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="30dp"
             android:text="正常"/>
+
+        <TextView
+            android:id="@+id/tv_bind_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#00FF00"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="@+id/tv_num"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_num"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="30dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

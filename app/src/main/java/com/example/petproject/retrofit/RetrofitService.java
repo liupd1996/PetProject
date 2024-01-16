@@ -1,11 +1,13 @@
 package com.example.petproject.retrofit;
 
 import com.example.petproject.bean.DeleteDeviceRequest;
+import com.example.petproject.bean.DevicePetRequest;
 import com.example.petproject.bean.DeviceRequest;
 import com.example.petproject.bean.DeviceResponse;
 import com.example.petproject.bean.InstallResponse;
 import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.PetRequest;
+import com.example.petproject.bean.PetResponse;
 import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
 
@@ -19,6 +21,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -48,11 +51,14 @@ public interface RetrofitService {
     @POST("/pet/insert")
     Observable<RemoteResult<Object>> petInsert(@Header("Authorization") String authorization, @Body PetRequest request);
 
+    @PUT("/pet/update")
+    Observable<RemoteResult<Object>> petUpdate(@Header("Authorization") String authorization, @Body PetRequest request);
+
     @DELETE("/pet/delete/{petId}")
     Observable<RemoteResult<Object>> petDelete(@Header("Authorization") String authorization, @Path("petId") String petId);
 
     @GET("/pet/searchByUser")
-    Observable<RemoteResult<List<PetRequest>>> petSearch(@Header("Authorization") String authorization);
+    Observable<RemoteResult<List<PetResponse>>> petSearch(@Header("Authorization") String authorization);
 
 
 
@@ -72,4 +78,9 @@ public interface RetrofitService {
                                            @Query("appKey") String appKey,
                                            @Query("buildKey") String buildKey);
 
+    @POST("/deviceOpr/bind")
+    Observable<RemoteResult<Object>> deviceBindPet(@Header("Authorization") String authorization, @Body DevicePetRequest request);
+
+    @POST("/deviceOpr/remove")
+    Observable<RemoteResult<Object>> deviceUnBindPet(@Header("Authorization") String authorization, @Body DevicePetRequest request);
 }

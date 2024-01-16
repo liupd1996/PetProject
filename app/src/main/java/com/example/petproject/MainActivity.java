@@ -69,7 +69,7 @@ public class MainActivity extends BaseActivity {
                 updateConfig.setCheckWifi(true);
                 updateConfig.setNeedCheckMd5(true);
                 updateConfig.setAlwaysShow(true);//是否每次提醒更新
-                updateConfig.setNotifyImgRes(R.mipmap.ic_launcher);
+                updateConfig.setNotifyImgRes(R.mipmap.logo);
                 UiConfig uiConfig = new UiConfig();
                 uiConfig.setUiType(UiType.PLENTIFUL);
                 UpdateAppUtils
