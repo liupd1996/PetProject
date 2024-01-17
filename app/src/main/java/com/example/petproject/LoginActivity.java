@@ -2,11 +2,23 @@ package com.example.petproject;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.TextAppearanceSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -34,6 +46,7 @@ public class LoginActivity extends BaseActivity {
     private EditText mEditVerify;
     private TimeCount mTimeCount;
     private TextView tv_notify;
+    private boolean mIsChecked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,12 +96,109 @@ public class LoginActivity extends BaseActivity {
                 tv_notify.setText("验证码不能为空");
                 return;
             }
+
+            if (!mIsChecked) {
+                ToastUtils.continuousToast(this, "请勾选用户协议");
+                tv_notify.setText("请勾选用户协议");
+                return;
+            }
             login(userName, verify);
         });
+
+        CheckBox agreeCheckbox = findViewById(R.id.agreeCheckbox);
+
+        agreeCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            mIsChecked = isChecked;
+        });
+
         ImageButton button = findViewById(R.id.iv_back);
         button.setOnClickListener(v -> {
             onBackPressed();
         });
+
+        initPrivacy();
+    }
+
+    private void initPrivacy() {
+        TextView textView = findViewById(R.id.tv_privacy);
+
+        // 设置原始文本
+        String fullText = "我已阅读并同意《用户协议》，《隐私政策》 及 《宠友圈行为规范》";
+        SpannableString spannableString = new SpannableString(fullText);
+
+        // 获取《用户协议》在字符串中的起始和结束位置
+        int startUserAgreement = fullText.indexOf("《用户协议》");
+        int endUserAgreement = startUserAgreement + "《用户协议》".length();
+
+        // 获取《隐私政策》在字符串中的起始和结束位置
+        int startPrivacyPolicy = fullText.indexOf("《隐私政策》");
+        int endPrivacyPolicy = startPrivacyPolicy + "《隐私政策》".length();
+
+        // 获取《宠友圈行为规范》在字符串中的起始和结束位置
+        int startBehaviorRules = fullText.indexOf("《宠友圈行为规范》");
+        int endBehaviorRules = startBehaviorRules + "《宠友圈行为规范》".length();
+
+        // 设置 ClickableSpan，实现点击事件
+        ClickableSpan userAgreementSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                // 处理点击《用户协议》事件
+                //openLink("https://example.com/user_agreement");
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);  // 取消下划线
+                ds.setColor(Color.parseColor("#0000FF"));  // 设置颜色
+            }
+        };
+
+        ClickableSpan privacyPolicySpan = new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                // 处理点击《隐私政策》事件
+                //openLink("https://example.com/privacy_policy");
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);  // 取消下划线
+                ds.setColor(Color.parseColor("#0000FF"));  // 设置颜色
+            }
+        };
+
+        ClickableSpan behaviorRulesSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                // 处理点击《宠友圈行为规范》事件
+                //openLink("https://example.com/behavior_rules");
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);  // 取消下划线
+                ds.setColor(Color.parseColor("#0000FF"));  // 设置颜色
+            }
+        };
+
+        // 将 ClickableSpan 应用到 SpannableString
+        spannableString.setSpan(userAgreementSpan, startUserAgreement, endUserAgreement, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(privacyPolicySpan, startPrivacyPolicy, endPrivacyPolicy, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(behaviorRulesSpan, startBehaviorRules, endBehaviorRules, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // 设置整体样式，包括颜色和下划线
+        TextAppearanceSpan textAppearanceSpan = new TextAppearanceSpan(this,0);
+        spannableString.setSpan(textAppearanceSpan, 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // 将 SpannableString 设置到 TextView，并启用点击事件
+        textView.setText(spannableString);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private void openLink(String url) {
+        // 打开链接的逻辑，可以根据需要自定义
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(intent);
     }
 
     private void login(String userName, String verify) {

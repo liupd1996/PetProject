@@ -158,7 +158,15 @@ public class DeviceInfoActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        ToastUtils.customToast(DeviceInfoActivity.this, ExceptionHandle.handleException(e).message);
+                        String message = ExceptionHandle.handleException(e).message;
+                        if (message.equals("invalid_token")) {
+                            ConfigPreferences.setLoginName(DeviceInfoActivity.this, "");
+                            ConfigPreferences.setLoginToken(DeviceInfoActivity.this, "");
+                            startActivity(new Intent(DeviceInfoActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            ToastUtils.customToast(DeviceInfoActivity.this, message);
+                        }
                     }
 
                     @Override
@@ -187,7 +195,15 @@ public class DeviceInfoActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        ToastUtils.customToast(DeviceInfoActivity.this, ExceptionHandle.handleException(e).message);
+                        String message = ExceptionHandle.handleException(e).message;
+                        if (message.equals("invalid_token")) {
+                            ConfigPreferences.setLoginName(DeviceInfoActivity.this, "");
+                            ConfigPreferences.setLoginToken(DeviceInfoActivity.this, "");
+                            startActivity(new Intent(DeviceInfoActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            ToastUtils.customToast(DeviceInfoActivity.this, message);
+                        }
                     }
 
                     @Override
@@ -216,7 +232,15 @@ public class DeviceInfoActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        ToastUtils.customToast(DeviceInfoActivity.this, ExceptionHandle.handleException(e).message);
+                        String message = ExceptionHandle.handleException(e).message;
+                        if (message.equals("invalid_token")) {
+                            ConfigPreferences.setLoginName(DeviceInfoActivity.this, "");
+                            ConfigPreferences.setLoginToken(DeviceInfoActivity.this, "");
+                            startActivity(new Intent(DeviceInfoActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            ToastUtils.customToast(DeviceInfoActivity.this, message);
+                        }
                     }
 
                     @Override

@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/agree_selector.xml" value="0.221" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_grape_corner_20dp.xml" value="0.1905" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_gray_corner_10dp.xml" value="0.229" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_gray_corner_20dp.xml" value="0.1535" />
@@ -18,6 +19,7 @@
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_main_color.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_selector.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/btn_radius_un_clickable.xml" value="0.1535" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/corner_black_back_4dp.xml" value="0.229" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/corner_black_back_8dp.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/corner_blue_back_4dp.xml" value="0.1535" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/data_selector.xml" value="0.1535" />

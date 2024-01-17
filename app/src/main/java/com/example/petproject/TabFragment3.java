@@ -119,7 +119,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
         });
 
         mapView = (MapView) view.findViewById(R.id.map);
-        mapView.onCreate(savedInstanceState);// 此方法必须重写
+        mapView.onCreate(savedInstanceState);// 此方法必须重写，这个时候就显示地图了
         init();
         return view;
     }

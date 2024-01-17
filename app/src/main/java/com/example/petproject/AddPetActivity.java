@@ -231,7 +231,16 @@ public class AddPetActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        ToastUtils.customToast(AddPetActivity.this, ExceptionHandle.handleException(e).message);
+                        String message = ExceptionHandle.handleException(e).message;
+                        if (message.equals("invalid_token")) {
+                            ConfigPreferences.setLoginName(AddPetActivity.this, "");
+                            ConfigPreferences.setLoginToken(AddPetActivity.this, "");
+                            startActivity(new Intent(AddPetActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            ToastUtils.customToast(AddPetActivity.this, message);
+                        }
+
                     }
 
                     @Override
@@ -269,7 +278,15 @@ public class AddPetActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        ToastUtils.customToast(AddPetActivity.this, ExceptionHandle.handleException(e).message);
+                        String message = ExceptionHandle.handleException(e).message;
+                        if (message.equals("invalid_token")) {
+                            ConfigPreferences.setLoginName(AddPetActivity.this, "");
+                            ConfigPreferences.setLoginToken(AddPetActivity.this, "");
+                            startActivity(new Intent(AddPetActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            ToastUtils.customToast(AddPetActivity.this, message);
+                        }
                     }
 
                     @Override
@@ -298,7 +315,15 @@ public class AddPetActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        ToastUtils.customToast(AddPetActivity.this, ExceptionHandle.handleException(e).message);
+                        String message = ExceptionHandle.handleException(e).message;
+                        if (message.equals("invalid_token")) {
+                            ConfigPreferences.setLoginName(AddPetActivity.this, "");
+                            ConfigPreferences.setLoginToken(AddPetActivity.this, "");
+                            startActivity(new Intent(AddPetActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            ToastUtils.customToast(AddPetActivity.this, message);
+                        }
                     }
 
                     @Override

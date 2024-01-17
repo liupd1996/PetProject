@@ -64,6 +64,7 @@ public class TabFragment1 extends Fragment {
     private ImageView iv_gender;
     private SureCancelDialog mPetDialog;
     private SureCancelDialog mDeviceDialog;
+    private String deviceId = "";
 
 
     public TabFragment1() {
@@ -128,7 +129,6 @@ public class TabFragment1 extends Fragment {
         client = new OkHttpClient();
         String token = "Bearer " + ConfigPreferences.login_token(getContext());
         search(token);
-        startWebSocket();
 
         mPetDialog = SureCancelDialog.newInstance("请添加宠物", "取消", "确定");
         mPetDialog.setOnCancelListener(new SureCancelDialog.OnSureCancelListener() {
@@ -162,6 +162,9 @@ public class TabFragment1 extends Fragment {
 
 
     public void startWebSocket() {
+        if (TextUtils.isEmpty(deviceId)) {
+            return;
+        }
         mWebSocketClient = new WebSocketClient(URI.create("ws://139.186.13.82:3003/terminal/realtime")) {
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
@@ -171,7 +174,7 @@ public class TabFragment1 extends Fragment {
                     request.setRequestType(1);
 
                     Data data = new Data();
-                    data.setTerminalID("10069096400");
+                    data.setTerminalID(deviceId);
                     data.setSubscribe(true);
 
                     request.setData(data);
@@ -230,8 +233,9 @@ public class TabFragment1 extends Fragment {
         double voltage = DataUtils.getBatteryPercentage(mExtendParamDesc);
         //String formattedValue = String.format("%.2f", voltage);
         TextView tv_battery = view.findViewById(R.id.tv_battery);
-        tv_battery.setText("电池电量" + (int) voltage + "%");
+        tv_battery.setText("电池电量:" + (int) voltage + "%");
         BatteryView batteryView = view.findViewById(R.id.battery);
+        batteryView.setVisibility(View.VISIBLE);
         batteryView.setBatteryLevel(voltage);
 
         //当日里程
@@ -310,7 +314,18 @@ public class TabFragment1 extends Fragment {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        ToastUtils.customToast(getContext(), ExceptionHandle.handleException(e).message);
+                        String message = ExceptionHandle.handleException(e).message;
+                        if (message.equals("invalid_token")) {
+                            ToastUtils.customToast(getContext(), "登录过期");
+                            ConfigPreferences.setLoginName(getContext(), "");
+                            ConfigPreferences.setLoginToken(getContext(), "");
+                            startActivity(new Intent(getActivity(), LoginActivity.class));
+                            if (getActivity() != null) {
+                                getActivity().finish();
+                            }
+                        } else {
+                            ToastUtils.customToast(getContext(), message);
+                        }
                     }
 
                     @Override
@@ -331,6 +346,8 @@ public class TabFragment1 extends Fragment {
         PetResponse petResponse;
         if (filterList.size() != 0) {
             petResponse = filterList.get(0);
+            deviceId = petResponse.deviceId;
+            startWebSocket();
         } else {
             petResponse = list.get(0);
         }

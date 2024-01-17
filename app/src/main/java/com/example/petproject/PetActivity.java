@@ -116,7 +116,15 @@ public class PetActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        ToastUtils.customToast(PetActivity.this, ExceptionHandle.handleException(e).message);
+                        String message = ExceptionHandle.handleException(e).message;
+                        if (message.equals("invalid_token")) {
+                            ConfigPreferences.setLoginName(PetActivity.this, "");
+                            ConfigPreferences.setLoginToken(PetActivity.this, "");
+                            startActivity(new Intent(PetActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            ToastUtils.customToast(PetActivity.this, message);
+                        }
                     }
 
                     @Override

@@ -54,6 +54,25 @@ public class ExceptionHandle {
                     }
                     break;
                 case UNAUTHORIZED:
+                    Response<?> response2 = httpException.response(); // 获取响应对象
+                    if (response2 != null && response2.errorBody() != null) {
+                        String errorBody = null; // 获取错误响应体字符串
+                        String message = null; // 获取错误响应体字符串
+                        try {
+                            errorBody = response2.errorBody().string();
+
+                            JSONObject jsonObject = new JSONObject(errorBody);
+                            message = jsonObject.getString("error");
+                        } catch (Exception exc) {
+                            exc.printStackTrace();
+                        }
+                        if (message != null) {
+                            ex.message = message;
+                        } else {
+                            ex.message = "未知错误";
+                        }
+                    }
+                    break;
                 case FORBIDDEN:
                 case NOT_FOUND:
                 case REQUEST_TIMEOUT:
