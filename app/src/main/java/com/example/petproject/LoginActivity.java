@@ -143,7 +143,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View widget) {
                 // 处理点击《用户协议》事件
-                //openLink("https://example.com/user_agreement");
+                openLink("http://petminder.cn/yhxyjsytk");
             }
             @Override
             public void updateDrawState(TextPaint ds) {
@@ -157,7 +157,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View widget) {
                 // 处理点击《隐私政策》事件
-                //openLink("https://example.com/privacy_policy");
+                openLink("http://petminder.cn/yszc");
             }
             @Override
             public void updateDrawState(TextPaint ds) {
@@ -171,7 +171,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View widget) {
                 // 处理点击《宠友圈行为规范》事件
-                //openLink("https://example.com/behavior_rules");
+                openLink("http://petminder.cn/hwgf");
             }
             @Override
             public void updateDrawState(TextPaint ds) {
@@ -197,7 +197,8 @@ public class LoginActivity extends BaseActivity {
 
     private void openLink(String url) {
         // 打开链接的逻辑，可以根据需要自定义
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        Intent intent = new Intent(LoginActivity.this,WebviewActivity.class);
+        intent.putExtra("result",url);
         startActivity(intent);
     }
 
@@ -223,6 +224,7 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         String message = ExceptionHandle.handleException(e).message;
+                        Log.d(TAG, "message**********************************: " + message);
                         if (message.equals("SS0002")) {//SS0002为手机号未注册的情况、SS0001为验证码问题
                             Intent intent = new Intent(LoginActivity.this, UserCenterActivity.class);
                             intent.putExtra("phone", userName);
@@ -232,7 +234,7 @@ public class LoginActivity extends BaseActivity {
                             Log.d(TAG, "handleException 验证码问题: ");
                             ToastUtils.customToast(LoginActivity.this, "验证码问题");
                         } else {
-                            ToastUtils.customToast(LoginActivity.this, ExceptionHandle.handleException(e).message);
+                            ToastUtils.customToast(LoginActivity.this, message);
                         }
                     }
 

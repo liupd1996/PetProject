@@ -15,9 +15,10 @@ public class PetResponse implements Parcelable {
     public int type;
     public String weight;
     public String deviceId;
+    public String deviceName;
 
-    public PetResponse(String avatar, String birth, int breed, int gender, String id
-            , int isSpayed, int isVaccinated, String name, int type, String weight) {
+    public PetResponse(String avatar, String birth, int breed, int gender, String id, int isSpayed,
+                       int isVaccinated, String name, int type, String weight, String deviceId, String deviceName) {
         this.avatar = avatar;
         this.birth = birth;
         this.breed = breed;
@@ -28,6 +29,8 @@ public class PetResponse implements Parcelable {
         this.name = name;
         this.type = type;
         this.weight = weight;
+        this.deviceId = deviceId;
+        this.deviceName = deviceName;
     }
 
     public void writeToParcel(Parcel dest, int flags) {
@@ -43,6 +46,7 @@ public class PetResponse implements Parcelable {
         dest.writeInt(type);
         dest.writeString(weight);
         dest.writeString(deviceId);
+        dest.writeString(deviceName);
     }
 
     // Parcelable 接口实现
@@ -78,5 +82,6 @@ public class PetResponse implements Parcelable {
         type = in.readInt();
         weight = in.readString();
         deviceId = in.readString();
+        deviceName = in.readString();
     }
 }

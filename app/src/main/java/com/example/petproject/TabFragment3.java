@@ -1,9 +1,11 @@
 package com.example.petproject;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,13 @@ import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
 import com.example.petproject.bean.JsonRequest;
+import com.example.petproject.bean.PetResponse;
+import com.example.petproject.bean.RemoteResult;
+import com.example.petproject.dialog.SureCancelDialog;
+import com.example.petproject.retrofit.ResultFunction;
+import com.example.petproject.retrofit.RetrofitUtils;
+import com.example.petproject.utils.ConfigPreferences;
+import com.example.petproject.utils.ExceptionHandle;
 import com.example.petproject.utils.ToastUtils;
 import com.google.gson.Gson;
 
@@ -40,6 +49,11 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class TabFragment3 extends Fragment implements LocationSource,
         AMapLocationListener {
@@ -56,6 +70,9 @@ public class TabFragment3 extends Fragment implements LocationSource,
     private double longitude = -1;
     private double latitude = -1;
     private Marker marker;
+
+    private SureCancelDialog mPetDialog;
+    private SureCancelDialog mDeviceDialog;
 
     public TabFragment3() {
         // Required empty public constructor
@@ -121,6 +138,35 @@ public class TabFragment3 extends Fragment implements LocationSource,
         mapView = (MapView) view.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，这个时候就显示地图了
         init();
+
+        mPetDialog = SureCancelDialog.newInstance("请添加宠物", "取消", "确定");
+        mPetDialog.setOnCancelListener(new SureCancelDialog.OnSureCancelListener() {
+            @Override
+            public void onCancel() {
+                mPetDialog.dismiss();
+            }
+
+            @Override
+            public void onSureListener(String text) {
+                Intent intent = new Intent(getActivity(), PetActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mDeviceDialog = SureCancelDialog.newInstance("请将设备与宠物绑定", "取消", "确定");
+        mDeviceDialog.setOnCancelListener(new SureCancelDialog.OnSureCancelListener() {
+            @Override
+            public void onCancel() {
+                mDeviceDialog.dismiss();
+            }
+
+            @Override
+            public void onSureListener(String text) {
+                Intent intent = new Intent(getActivity(), DeviceActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
@@ -128,14 +174,15 @@ public class TabFragment3 extends Fragment implements LocationSource,
         @Override
         public void run() {
             setPosition(latitude, longitude);
-            ToastUtils.continuousToast(getContext(), "定位成功");
         }
     };
 
     private Runnable mRunnable2 = new Runnable() {
         @Override
         public void run() {
-            startWebSocket();
+            //startWebSocket();
+            String token = "Bearer " + ConfigPreferences.login_token(getContext());
+            search(token);
         }
     };
 
@@ -145,7 +192,6 @@ public class TabFragment3 extends Fragment implements LocationSource,
     private void init() {
         aMap = mapView.getMap();
         setUpMap();
-        //startWebSocket();
         mHandler.removeCallbacks(mRunnable2);
         mHandler.postDelayed(mRunnable2, 2000);//先显示定位蓝点后，再定位宠物
     }
@@ -269,6 +315,9 @@ public class TabFragment3 extends Fragment implements LocationSource,
     }
 
     public void startWebSocket() {
+        if (TextUtils.isEmpty(deviceId) || deviceId.equals("0")) {
+            return;
+        }
         mWebSocketClient = new WebSocketClient(URI.create("ws://139.186.13.82:3003/terminal/realtime")) {
 
             @Override
@@ -279,7 +328,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
                     request.setRequestType(1);
 
                     JsonRequest.Data data = new JsonRequest.Data();
-                    data.setTerminalID("10069096400");
+                    data.setTerminalID(deviceId);
                     data.setSubscribe(true);
 
                     request.setData(data);
@@ -336,7 +385,8 @@ public class TabFragment3 extends Fragment implements LocationSource,
 
     private void setPosition(double latitude, double longitude) {
         if (latitude == -1 || longitude == -1) {
-            ToastUtils.customToast(getContext(), "等待设备连接，请稍后");
+            //ToastUtils.customToast(getContext(), "等待设备连接，请稍后");
+            ToastUtils.customToast(getContext(), "请先添加宠物并绑定设备");
             return;
         }
         CoordinateConverter converter = new CoordinateConverter(getContext());
@@ -362,10 +412,79 @@ public class TabFragment3 extends Fragment implements LocationSource,
             // }
             // 将地图视图移动到指定的经纬度位置
             aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15)); // 设置缩放级别为 15
+            ToastUtils.continuousToast(getContext(), "定位成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
+    }
+
+
+    private void search(String token) {
+        RetrofitUtils.getRetrofitService().petSearch(token)
+                .filter(new ResultFunction())
+                .subscribeOn(Schedulers.io())//todo filter
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RemoteResult<List<PetResponse>>>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(@io.reactivex.annotations.NonNull RemoteResult<List<PetResponse>> result) {
+                        updateView(result.data);
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        String message = ExceptionHandle.handleException(e).message;
+                        if (message.equals("invalid_token")) {
+                            ToastUtils.customToast(getContext(), "登录过期");
+                            ConfigPreferences.setLoginName(getContext(), "");
+                            ConfigPreferences.setLoginToken(getContext(), "");
+                            startActivity(new Intent(getActivity(), LoginActivity.class));
+                            if (getActivity() != null) {
+                                getActivity().finish();
+                            }
+                        } else {
+                            ToastUtils.customToast(getContext(), message);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
+    private String deviceId = "";
+
+    private void updateView(List<PetResponse> list) {
+        if (list.size() == 0) {
+            mPetDialog.show(getActivity().getSupportFragmentManager(), "addPet");
+            return;
+        }
+        List<PetResponse> filterList = filterList(list);
+        if (filterList.size() == 0) {
+            mDeviceDialog.show(getActivity().getSupportFragmentManager(), "addDevice");
+        }
+        PetResponse petResponse;
+        Log.d(TAG, "updateView: " + filterList.size());
+        if (filterList.size() != 0) {
+            petResponse = filterList.get(0);
+            deviceId = petResponse.deviceName;
+            startWebSocket();
+        }
+    }
+
+    private List<PetResponse> filterList(List<PetResponse> data) {
+        List<PetResponse> filterList = new ArrayList<>();
+        for (PetResponse response : data) {
+            if (!TextUtils.isEmpty(response.deviceId) && !response.deviceId.equals("0")) {
+                filterList.add(response);
+            }
+        }
+        return filterList;
     }
 }

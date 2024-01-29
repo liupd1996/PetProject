@@ -74,6 +74,7 @@ public class PetActivity extends BaseActivity {
                 Intent intent = new Intent(this, AddPetActivity.class);
                 intent.putExtra("bean", bean);
                 startActivity(intent);
+                finish();
             }
         });
         mRecyclerView.setAdapter(mAdapter);

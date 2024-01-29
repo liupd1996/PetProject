@@ -119,7 +119,8 @@ public class UserCenterActivity extends BaseActivity {
                     @Override
                     public void onNext(@NonNull LoginResponse result) {
                         ConfigPreferences.setLoginName(UserCenterActivity.this, userName);
-                        ConfigPreferences.setLoginToken(UserCenterActivity.this, result.refresh_token);
+                        ConfigPreferences.setLoginToken(UserCenterActivity.this, result.access_token);
+                        ConfigPreferences.setRefreshToken(UserCenterActivity.this, result.refresh_token);
                         startActivity(new Intent(UserCenterActivity.this, MainActivity.class));
                         ToastUtils.customToast(UserCenterActivity.this, "登录成功");
                         finish();

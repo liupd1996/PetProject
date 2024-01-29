@@ -42,10 +42,15 @@ public class ExceptionHandle {
                             errorBody = response.errorBody().string();
 
                             JSONObject jsonObject = new JSONObject(errorBody);
-                            message = jsonObject.getString("error_description");
+                            JSONObject dataObject = jsonObject.optJSONObject("data");
+                            if (dataObject != null) {
+                                message = dataObject.optString("error_description");
+                            }
+                            Log.d("1111", "handleException___________________1: " + message);
                         } catch (Exception exc) {
                             exc.printStackTrace();
                         }
+                        Log.d("1111", "handleException___________________2: " + message);
                         if (message != null) {
                             ex.message = message;
                         } else {

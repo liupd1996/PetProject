@@ -162,6 +162,7 @@ public class TabFragment1 extends Fragment {
 
 
     public void startWebSocket() {
+        Log.d(TAG, "startWebSocket: " + deviceId);
         if (TextUtils.isEmpty(deviceId)) {
             return;
         }
@@ -344,9 +345,10 @@ public class TabFragment1 extends Fragment {
             mDeviceDialog.show(getActivity().getSupportFragmentManager(), "addDevice");
         }
         PetResponse petResponse;
+        Log.d(TAG, "updateView: " + filterList.size());
         if (filterList.size() != 0) {
             petResponse = filterList.get(0);
-            deviceId = petResponse.deviceId;
+            deviceId = petResponse.deviceName;
             startWebSocket();
         } else {
             petResponse = list.get(0);

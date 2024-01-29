@@ -212,8 +212,9 @@ public class DeviceInfoActivity extends BaseActivity {
                 });
     }
 
+    //取消绑定
     private void unbindPet(String token) {
-        RetrofitUtils.getRetrofitService().deviceUnBindPet(token, new DevicePetRequest(deviceId, petRequest.id))
+        RetrofitUtils.getRetrofitService().deviceUnBindPet(token, new DevicePetRequest(deviceId, petId))
                 .filter(new ResultFunction())
                 .subscribeOn(Schedulers.io())//todo add edit
                 .observeOn(AndroidSchedulers.mainThread())
