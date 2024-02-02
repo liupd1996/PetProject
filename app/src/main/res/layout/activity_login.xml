@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
-    android:background="@drawable/login_back">
+    tools:context=".LoginActivity">
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,75 +29,67 @@
         android:layout_marginStart="33dp"
         android:layout_marginTop="155dp"/>
 
-    <TextView
-        android:id="@+id/tv_account_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="账号"
-        android:textColor="#999999"
-        android:layout_marginStart="33dp"
-        android:layout_marginTop="37dp"/>
-
     <EditText
         android:id="@+id/edit_account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/tv_account_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
+        android:paddingStart="10dp"
+        android:textStyle="bold"
         android:textColor="@color/black"
         android:hint="请输入手机号"
-        android:textColorHint="#CCCCCC"
+        android:textColorHint="#707070"
         android:maxLength="32"
         android:singleLine="true"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="25dp"
         android:inputType="number"
-        android:background="@null"
-        android:longClickable="false"/>
+        android:background="@drawable/bg_gray2_corner_10dp"
+        android:longClickable="false" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/edit_account"
-        android:background="#ffe6e6e6" />
-
-    <TextView
-        android:id="@+id/tv_verify"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/edit_account"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="验证码"
-        android:textColor="#999999"
-        android:layout_marginStart="33dp"
-        android:layout_marginTop="31dp"/>
+<!--    <View-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/edit_account"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/edit_account"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/edit_account"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/edit_account"-->
+<!--        android:background="@drawable/bg_gray2_corner_10dp"/>-->
 
     <EditText
         android:id="@+id/verifyEditor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/tv_verify"
+        app:layout_constraintTop_toBottomOf="@+id/edit_account"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/accessVerifyCode"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:layout_marginTop="13dp"
+        android:paddingStart="10dp"
+        android:textStyle="bold"
+        android:layout_marginTop="40dp"
         android:textColor="@color/black"
         android:hint="请输入验证码"
-        android:textColorHint="#CCCCCC"
+        android:textColorHint="#707070"
         android:inputType="numberDecimal"
         android:maxLength="6"
-        android:background="@null"
+        android:background="@drawable/bg_gray2_corner_10dp"
         android:longClickable="false"/>
+
+<!--    <View-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/verifyEditor"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/verifyEditor"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/verifyEditor"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/verifyEditor"-->
+<!--        android:background="@drawable/bg_gray2_corner_10dp"/>-->
 
     <CheckBox
         android:id="@+id/agreeCheckbox"
@@ -106,7 +97,7 @@
         android:layout_height="30dp"
         app:layout_constraintStart_toStartOf="@+id/verifyEditor"
         app:layout_constraintTop_toBottomOf="@+id/verifyEditor"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:button="@drawable/agree_selector"/>
     <TextView
         android:id="@+id/tv_privacy"
@@ -120,21 +111,11 @@
         android:textSize="14sp"
         android:textStyle="bold"/>
 
-    <View
-        android:id="@+id/line2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/verifyEditor"
-        android:background="#ffe6e6e6" />
-
     <TextView
         android:id="@+id/accessVerifyCode"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="4dp"
-        android:layout_marginEnd="32dp"
         android:background="@drawable/btn_radius_selector"
         android:paddingStart="10dp"
         android:paddingTop="5dp"
@@ -143,9 +124,10 @@
         android:text="获取验证码"
         android:textColor="@android:color/white"
         android:textSize="14sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/verifyEditor"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@id/verifyEditor"
         app:layout_constraintTop_toTopOf="@id/verifyEditor"
+        app:layout_constraintBottom_toBottomOf="@+id/verifyEditor"
         />
 
     <TextView
@@ -156,6 +138,7 @@
         app:layout_constraintTop_toBottomOf="@+id/verifyEditor"
         android:textSize="14sp"
         android:textColor="#FF0000"
+        android:textStyle="bold"
         android:layout_marginTop="2dp"/>
 
 
@@ -165,11 +148,21 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/agreeCheckbox"
         android:text="登录"
-        android:background="@drawable/corner_black_back_4dp"
+        android:background="@drawable/corner_orange_back_4dp"
         android:textColor="@color/white"
         android:layout_marginTop="44dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:textSize="18sp"/>
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/login_back"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

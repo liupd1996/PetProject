@@ -87,19 +87,19 @@ public class LoginActivity extends BaseActivity {
             String userName = mEditName.getText().toString();
             String verify = mEditVerify.getText().toString();
             if (TextUtils.isEmpty(userName)) {
-                ToastUtils.continuousToast(this, "手机号不能为空");
-                tv_notify.setText("手机号不能为空");
+                //ToastUtils.continuousToast(this, "请输入正确的手机号");
+                tv_notify.setText("请输入正确的手机号");
                 return;
             }
             if (TextUtils.isEmpty(verify)) {
-                ToastUtils.continuousToast(this, "验证码不能为空");
-                tv_notify.setText("验证码不能为空");
+                //ToastUtils.continuousToast(this, "请获取验证码");
+                tv_notify.setText("请获取验证码");
                 return;
             }
 
             if (!mIsChecked) {
-                ToastUtils.continuousToast(this, "请勾选用户协议");
-                tv_notify.setText("请勾选用户协议");
+                //ToastUtils.continuousToast(this, "请阅读并同意用户协议");
+                tv_notify.setText("请阅读并同意用户协议");
                 return;
             }
             login(userName, verify);
@@ -149,7 +149,7 @@ public class LoginActivity extends BaseActivity {
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
                 ds.setUnderlineText(false);  // 取消下划线
-                ds.setColor(Color.parseColor("#0000FF"));  // 设置颜色
+                ds.setColor(Color.parseColor("#6C97DA"));  // 设置颜色
             }
         };
 
@@ -163,7 +163,7 @@ public class LoginActivity extends BaseActivity {
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
                 ds.setUnderlineText(false);  // 取消下划线
-                ds.setColor(Color.parseColor("#0000FF"));  // 设置颜色
+                ds.setColor(Color.parseColor("#6C97DA"));  // 设置颜色
             }
         };
 
@@ -177,7 +177,7 @@ public class LoginActivity extends BaseActivity {
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
                 ds.setUnderlineText(false);  // 取消下划线
-                ds.setColor(Color.parseColor("#0000FF"));  // 设置颜色
+                ds.setColor(Color.parseColor("#6C97DA"));  // 设置颜色
             }
         };
 
@@ -232,9 +232,11 @@ public class LoginActivity extends BaseActivity {
                             startActivity(intent);
                         } else if (message.equals("SS0001")) {
                             Log.d(TAG, "handleException 验证码问题: ");
-                            ToastUtils.customToast(LoginActivity.this, "验证码问题");
+                            //ToastUtils.customToast(LoginActivity.this, "输入的验证码有误");
+                            tv_notify.setText("输入的验证码有误");
                         } else {
-                            ToastUtils.customToast(LoginActivity.this, message);
+                            //ToastUtils.customToast(LoginActivity.this, message);
+                            tv_notify.setText(message);
                         }
                     }
 
@@ -273,7 +275,8 @@ public class LoginActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        ToastUtils.customToast(LoginActivity.this, ExceptionHandle.handleException(e).message);
+                        //ToastUtils.customToast(LoginActivity.this, ExceptionHandle.handleException(e).message);
+                        tv_notify.setText(ExceptionHandle.handleException(e).message);
                     }
 
                     @Override

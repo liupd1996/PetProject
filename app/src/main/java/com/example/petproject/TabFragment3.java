@@ -20,15 +20,17 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.CoordinateConverter;
 import com.amap.api.location.DPoint;
-import com.amap.api.maps2d.AMap;
-import com.amap.api.maps2d.CameraUpdateFactory;
-import com.amap.api.maps2d.LocationSource;
-import com.amap.api.maps2d.MapView;
-import com.amap.api.maps2d.model.BitmapDescriptorFactory;
-import com.amap.api.maps2d.model.LatLng;
-import com.amap.api.maps2d.model.Marker;
-import com.amap.api.maps2d.model.MarkerOptions;
-import com.amap.api.maps2d.model.MyLocationStyle;
+
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.LocationSource;
+import com.amap.api.maps.MapView;
+import com.amap.api.maps.TextureMapView;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.example.petproject.bean.JsonRequest;
 import com.example.petproject.bean.PetResponse;
 import com.example.petproject.bean.RemoteResult;
@@ -59,7 +61,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
         AMapLocationListener {
     private static final String TAG = "TabFragment3";
     private View view;
-    private MapView mapView;
+    private TextureMapView mapView;
     private AMap aMap;
     private AMapLocation amapLocation;
     private OnLocationChangedListener mListener;
@@ -135,7 +137,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
             ToastUtils.continuousToast(getContext(), "功能升级中");
         });
 
-        mapView = (MapView) view.findViewById(R.id.map);
+        mapView = (TextureMapView) view.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，这个时候就显示地图了
         init();
 

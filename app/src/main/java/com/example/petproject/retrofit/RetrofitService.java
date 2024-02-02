@@ -87,9 +87,7 @@ public interface RetrofitService {
     @POST("/deviceOpr/remove")
     Observable<RemoteResult<Object>> deviceUnBindPet(@Header("Authorization") String authorization, @Body DevicePetRequest request);
 
-
-
-//    @Multipart
-//    @POST("upload") // 替换为实际的上传接口路径
-//    Observable<UploadResponse> uploadImage(@Part MultipartBody.Part image);
+    @Multipart
+    @POST("/user/upload") // 替换为实际的上传接口路径
+    Observable<RemoteResult<Object>> uploadImage(@Part MultipartBody.Part file);
 }
