@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.petproject.adapter.MyFragmentPagerAdapter2;
@@ -134,6 +136,7 @@ public class MainActivity extends BaseActivity {
 
     private void initView() {
         ViewPager viewPager = findViewById(R.id.viewpager);
+        viewPager.setOffscreenPageLimit(5);
         TabLayout tabLayout = findViewById(R.id.tabs);
 
         List<Fragment> fragments = new ArrayList<>();
@@ -167,7 +170,7 @@ public class MainActivity extends BaseActivity {
         tab3.setIcon(R.drawable.map_selector); // 设置图标
         TabLayout.Tab tab4 = tabLayout.getTabAt(3);
         tab4.setText("消息");
-        tab4.setIcon(R.drawable.data_selector); // 设置图标
+        tab4.setIcon(R.drawable.msg_selector); // 设置图标
         TabLayout.Tab tab5 = tabLayout.getTabAt(4);
         tab5.setText("我的");
         tab5.setIcon(R.drawable.me_selector); // 设置图标

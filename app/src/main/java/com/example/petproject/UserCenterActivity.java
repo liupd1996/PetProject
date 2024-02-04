@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -93,7 +94,19 @@ public class UserCenterActivity extends BaseActivity {
             fragmentGender.show(getSupportFragmentManager(), fragmentGender.getTag());
         });
 
-        findViewById(R.id.btn_register).setOnClickListener(v -> {
+        Intent intentResult = getIntent();
+        int type = intentResult.getIntExtra("type",-1);//type == 1 ,编辑个人信息
+        Button btn_register = findViewById(R.id.btn_register);
+        if (type == 1) {
+            btn_register.setText("完成");
+            mTvName.setText(ConfigPreferences.name(UserCenterActivity.this));
+            mTvGender.setText(ConfigPreferences.gender(UserCenterActivity.this));
+        }
+        btn_register.setOnClickListener(v -> {
+            if (type == 1) {
+                ToastUtils.customToast(UserCenterActivity.this,"编辑接口升级中");
+                return;
+            }
             Intent intent = getIntent();
             String phone = intent.getStringExtra("phone");
             String smsCode = intent.getStringExtra("smsCode");

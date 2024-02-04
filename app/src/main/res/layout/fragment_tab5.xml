@@ -1,277 +1,305 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".TabFragment5">
-
-  <FrameLayout
-      class="android.widget.LinearLayout"
-      android:layout_width="550dp"
-      android:layout_height="300dp"
-      android:layout_marginLeft="-66dp"
-      android:layout_marginTop="-75dp"
-      android:background="@drawable/myoval">
-    <TextView
-        android:layout_width="180dp"
-        android:layout_height="80dp"
-        android:text="这是昵称称称称称称称称称称称称"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_marginTop="144dp"
-        android:layout_marginLeft="199dp"
-
-        />
-
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".TabFragment4">
     <ImageView
-        android:id="@+id/image0"
-        android:layout_width="100dp"
-        android:layout_height="94dp"
-        android:layout_marginLeft="85dp"
-        android:layout_marginTop="120dp"
-        android:scaleType="fitXY"
+        android:id="@+id/iv_back"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="16:9"
+        android:background="@drawable/mine_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.example.petproject.customview.CircularImageView
+        android:id="@+id/iv_head"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="70dp"
+        android:layout_marginStart="40dp"
+        android:scaleType="fitCenter"
         android:src="@drawable/user" />
 
     <ImageView
-        android:id="@+id/image13"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/pen"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_head"
+        app:layout_constraintEnd_toEndOf="@+id/iv_head"/>
+
+    <ImageView
+        android:id="@+id/iv_scan"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="130dp"
-        android:layout_marginLeft="400dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/scan" />
-    <ImageView
-        android:id="@+id/image14"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="180dp"
-        android:layout_marginLeft="155dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/pen" />
-
-
-  </FrameLayout>
-
-
-  <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content">
-
-  </LinearLayout>
-
-
-  <LinearLayout
-      android:id="@+id/ll_device"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="20dp">
-    <ImageView
-        android:id="@+id/image1"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/device"
-        android:layout_margin="8dp"
-        />
+        android:src="@drawable/scan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_head"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="20sp"
+        android:visibility="gone"/>
 
     <TextView
+        android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="我的设备"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_marginTop="9dp"
-
-        />
-    <TextView
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        />
-    <ImageView
-        android:id="@+id/image2"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/rightrow"
-        android:layout_margin="13dp"
-        />
-  </LinearLayout>
-
-  <LinearLayout
-      android:id="@+id/ll_pet"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/image3"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/pet"
-        android:layout_margin="8dp"
-        />
+        android:text="家人们谁懂啊"
+        app:layout_constraintTop_toTopOf="@+id/iv_head"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toEndOf="@+id/iv_head"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
 
     <TextView
+        android:id="@+id/tv_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="我的宠物"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_marginTop="9dp"
-        />
-    <TextView
-        android:layout_width="200dp"
+        android:text="家人们谁懂啊"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="@+id/tv_name"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_device"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
-    <ImageView
-        android:id="@+id/image4"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/rightrow"
-        android:layout_margin="13dp"
-        />
-  </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/iv_back"
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:id="@+id/image1"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/device"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="25dp" />
 
-  <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/image5"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/space"
-        android:layout_margin="8dp"
-        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/image1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="我的设备"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginStart="10dp"/>
+        <ImageView
+            android:id="@+id/row1"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/rightrow"
+            android:layout_marginEnd="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_pet"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="我的空间"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_marginTop="9dp"
-        />
-    <TextView
-        android:layout_width="200dp"
+        app:layout_constraintTop_toBottomOf="@+id/cl_device"
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:id="@+id/image2"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/pet"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="25dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/image2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="我的宠物"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginStart="10dp"/>
+        <ImageView
+            android:id="@+id/row2"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/rightrow"
+            android:layout_marginEnd="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_space"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
-    <ImageView
-        android:id="@+id/image6"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/rightrow"
-        android:layout_margin="13dp"
-        />
-  </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/cl_pet"
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:id="@+id/image3"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/space"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="25dp" />
 
-  <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/image7"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/security"
-        android:layout_margin="8dp"
-        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/image3"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="我的空间"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginStart="10dp"/>
+        <ImageView
+            android:id="@+id/row3"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/rightrow"
+            android:layout_marginEnd="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_privacy"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="隐私保护"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_marginTop="9dp"
-        />
-    <TextView
-        android:layout_width="200dp"
+        app:layout_constraintTop_toBottomOf="@+id/cl_space"
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:id="@+id/image4"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/security"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="25dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/image4"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="隐私保护"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginStart="10dp"/>
+        <ImageView
+            android:id="@+id/row4"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/rightrow"
+            android:layout_marginEnd="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_help"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
-    <ImageView
-        android:id="@+id/image8"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/rightrow"
-        android:layout_margin="13dp"
-        />
-  </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/cl_privacy"
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:id="@+id/image5"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/help"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="25dp" />
 
-  <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/image9"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/help"
-        android:layout_margin="8dp"
-        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/image5"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="帮助中心"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginStart="10dp"/>
+        <ImageView
+            android:id="@+id/row5"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/rightrow"
+            android:layout_marginEnd="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_setting"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="帮助中心"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_marginTop="9dp"
-        />
-    <TextView
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        />
-    <ImageView
-        android:id="@+id/image10"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/rightrow"
-        android:layout_margin="13dp"
-        />
-  </LinearLayout>
-  <LinearLayout
-      android:id="@+id/ll_setting"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/image11"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/settings"
-        android:layout_margin="8dp"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/cl_help"
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:id="@+id/image6"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/settings"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="25dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="设置"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_marginTop="9dp"
-        />
-    <TextView
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        />
-    <ImageView
-        android:id="@+id/image12"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/rightrow"
-        android:layout_margin="13dp"
-        />
-  </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/image6"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="我的设置"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginStart="10dp"/>
+        <ImageView
+            android:id="@+id/row6"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/rightrow"
+            android:layout_marginEnd="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-</LinearLayout>
-
-
+</androidx.constraintlayout.widget.ConstraintLayout>

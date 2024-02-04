@@ -1,11 +1,13 @@
 package com.example.petproject;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URI;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -87,6 +90,7 @@ public class TabFragment1 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView1111: ");
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tab1, container, false);
         view.findViewById(R.id.cl_news).setOnClickListener(view -> {
@@ -120,6 +124,10 @@ public class TabFragment1 extends Fragment {
         view.findViewById(R.id.btn_diary).setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), DataActivity.class);
             startActivity(intent);
+        });
+
+        view.findViewById(R.id.cl_title).setOnClickListener(view -> {
+            startWebSocket(1);
         });
         tv_name = view.findViewById(R.id.tv_name);
         tv_birth = view.findViewById(R.id.tv_birth);
@@ -161,7 +169,7 @@ public class TabFragment1 extends Fragment {
     }
 
 
-    public void startWebSocket() {
+    public void startWebSocket(int type) {
         Log.d(TAG, "startWebSocket: " + deviceId);
         if (TextUtils.isEmpty(deviceId)) {
             return;
@@ -213,6 +221,15 @@ public class TabFragment1 extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                if (type == 1) {
+                    requireActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtils.customToast(getContext(),"获取宠物最新数据成功");
+                        }
+                    });
+                }
                 // 接收到消息时的处理
             }
 
@@ -224,6 +241,14 @@ public class TabFragment1 extends Fragment {
             @Override
             public void onError(Exception e) {
                 // 连接失败时的处理
+                if (type == 1) {
+                    requireActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtils.customToast(getContext(),"获取宠物最新数据失败");
+                        }
+                    });
+                }
             }
         };
 
@@ -242,17 +267,22 @@ public class TabFragment1 extends Fragment {
         //当日里程
         String todayKm = DataUtils.extractVTodayKm(mExtendParamDesc);
         TextView tv_exercise = view.findViewById(R.id.tv_exercise);
-        tv_exercise.setText(todayKm + "km");
+        String fullTodayKm = todayKm + " 千米";
+        tv_exercise.setText(getTextSizeSpan(fullTodayKm, 0, fullTodayKm.length()-2));
         //卡路里
 
         double todayKm2 = Double.parseDouble(todayKm);
         int todayCalorieConsumption = (int) (2.5 * todayKm2 * 1.063);
         TextView tv_cal = view.findViewById(R.id.tv_cal);
-        tv_cal.setText(todayCalorieConsumption + "kcal");
+        String fullTodayCalorieConsumption = todayCalorieConsumption + " 卡路里";
+        tv_cal.setText(getTextSizeSpan(fullTodayCalorieConsumption, 0, fullTodayCalorieConsumption.length()-3));
         //体温
         double tempature = DataUtils.extractTemperatures(mExtendParamDesc);
+        DecimalFormat decimalFormat = new DecimalFormat("#.#");
+        String formattedTemperature = decimalFormat.format(tempature);
         TextView tv_temperature = view.findViewById(R.id.tv_temperature);
-        tv_temperature.setText(tempature + "°C");
+        String temperature = formattedTemperature + " 摄氏度";
+        tv_temperature.setText(getTextSizeSpan(temperature,0,temperature.length()-3));
         DataUtils.testRegexMatch(mExtendParamDesc);
 
         //行为检测
@@ -267,15 +297,15 @@ public class TabFragment1 extends Fragment {
         String heartRate = "未知";
         if (maxXValue < 1000) {
             petPosture = "休息中";
-            respiratorRate = "10-20次/min";
-            heartRate = "60-100次/秒";
+            respiratorRate = "10-20 次/分";
+            heartRate = "60-100 次/秒";
             iv_sleep.setBackgroundResource(R.drawable.relax);
         } else if (maxXValue < 2000 || maxXValue >= 1000) {
             petPosture = "行走中";
-            String respiratorRate1 = "20-30次/min";
-            String respiratorRate2 = "30-40次/min";
-            String heartRate1 = "100-140次/秒";
-            String heartRate2 = "140-160次/秒";
+            String respiratorRate1 = "20-30 次/分";
+            String respiratorRate2 = "30-40 次/分";
+            String heartRate1 = "100-140 次/秒";
+            String heartRate2 = "140-160 次/秒";
             Random random = new Random();
             int index = random.nextInt(2);
             if (index == 0) {
@@ -288,13 +318,14 @@ public class TabFragment1 extends Fragment {
             iv_sleep.setBackgroundResource(R.drawable.walk);
         } else {
             petPosture = "运动中";
-            respiratorRate = ">40次/min";
-            heartRate = ">160次/秒";
-            iv_sleep.setBackgroundResource(R.drawable.exercise);
+            respiratorRate = ">40 次/分";
+            heartRate = ">160 次/秒";
+            iv_sleep.setBackgroundResource(R.drawable.exercise_icon);
         }
+
         tv_act.setText(petPosture);
-        tv_breath.setText(respiratorRate);
-        tv_heart.setText(heartRate);
+        tv_breath.setText(getTextSizeSpan(respiratorRate,0,respiratorRate.length()-3));
+        tv_heart.setText(getTextSizeSpan(heartRate,0,heartRate.length()-3));
         Log.d(TAG, "updateView: " + voltage + "--:" + tempature);
     }
 
@@ -349,12 +380,14 @@ public class TabFragment1 extends Fragment {
         if (filterList.size() != 0) {
             petResponse = filterList.get(0);
             deviceId = petResponse.deviceName;
-            startWebSocket();
+            startWebSocket(0);
         } else {
             petResponse = list.get(0);
         }
         tv_name.setText(petResponse.name);
-        tv_weight.setText(petResponse.weight + "Kg");
+
+        String weight = petResponse.weight + " 千克";
+        tv_weight.setText(getTextSizeSpan(weight,0,petResponse.weight.length() + 1));
         if (petResponse.type == 0) {
             tv_birth.setText("猫猫");
             avatar.setImageResource(R.drawable.cat_default);
@@ -377,5 +410,17 @@ public class TabFragment1 extends Fragment {
             }
         }
         return filterList;
+    }
+
+    private SpannableStringBuilder getTextSizeSpan(String fullText, int start, int end) {
+
+        // Create a SpannableString
+        SpannableStringBuilder builder = new SpannableStringBuilder(fullText);
+
+        builder.setSpan(new AbsoluteSizeSpan(26, true), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Set the size of the "km" part
+        builder.setSpan(new AbsoluteSizeSpan(12, true), end, fullText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return builder;
     }
 }

@@ -208,7 +208,6 @@ public class TabFragment3 extends Fragment implements LocationSource,
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         //myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);//定位一次，且将视角移动到地图中心点。
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，并且蓝点会跟随设备移动。
-
         //myLocationStyle.interval(2000);//设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory
                 .fromResource(R.mipmap.location_marker));// 设置小蓝点的图标
@@ -264,12 +263,14 @@ public class TabFragment3 extends Fragment implements LocationSource,
         if (mListener != null && amapLocation != null) {
             if (amapLocation.getErrorCode() == 0) {
                 this.amapLocation = amapLocation;
-                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+                //mListener.onLocationChanged(amapLocation);// todo 显示系统小蓝点 5.0.0版本以前mListener.onLocationChanged(amapLocation);”可以在地图上显示系统小蓝点。
+                aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude()), 15)); // yourLatitude和yourLongitude是定位得到的经纬度信息
                 //Log.d("1111", amapLocation.toString());
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
                 //Log.e("1111",errText);
             }
+            mlocationClient.stopLocation();
         }
     }
 

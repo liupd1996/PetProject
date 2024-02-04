@@ -5,15 +5,57 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".TabFragment1"
-    android:background="#FFA500">
+    android:background="@drawable/orange_gradient">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp">
+        <ImageView
+            android:id="@+id/iv_refresh"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/refresh"
+            android:layout_marginStart="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取宠物最新数据"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="@+id/iv_refresh"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_refresh"
+            app:layout_constraintStart_toEndOf="@+id/iv_refresh"
+            android:layout_marginStart="10dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        app:layout_constraintTop_toTopOf="@+id/cl_title"
+        app:layout_constraintBottom_toBottomOf="@id/cl_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/repost"
+        android:scaleType="fitCenter"/>
+
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_top"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_title"
         android:background="@drawable/bg_white_corner_20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp">
 
@@ -104,108 +146,185 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:id="@+id/cl_act"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="150dp"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                android:background="@drawable/bg_orange_corner_20dp"-->
-<!--                android:layout_marginStart="15dp"-->
-<!--                android:layout_marginEnd="15dp"-->
-<!--                android:layout_marginTop="15dp">-->
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toTopOf="@+id/iv_sleep"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:textSize="16sp"-->
-<!--                    android:text="实时行为检测" />-->
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_act"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:textSize="28sp"-->
-<!--                    android:text=""-->
-<!--                    android:layout_marginStart="18dp"/>-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/iv_sleep"-->
-<!--                    android:layout_width="120dp"-->
-<!--                    android:layout_height="75dp"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    android:background="@drawable/cat_sleep"/>-->
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_news"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 app:layout_constraintTop_toTopOf="parent"
-                android:background="@drawable/bg_pink_corner_20dp"
+                android:background="@drawable/bg_white_corner_20dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp">
                 <ImageView
                     android:id="@+id/iv_ring"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/ring"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/health"
+                    app:layout_constraintTop_toTopOf="@+id/pet_remind_title"
+                    app:layout_constraintBottom_toBottomOf="@+id/pet_remind_title"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="10dp"/>
+                    android:layout_marginStart="15dp"/>
+
+                <TextView
+                    android:id="@+id/pet_remind_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@+id/iv_ring"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:text="宠物健康简报："
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="#000000"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp"/>
+
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     app:layout_constraintStart_toEndOf="@+id/iv_ring"
+                    app:layout_constraintTop_toBottomOf="@+id/pet_remind_title"
                     android:layout_marginStart="15dp"
                     android:text="一切正常"
                     android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textColor="#707070"
                     android:gravity="center_vertical" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_breanth"
+                android:id="@+id/cl_exercise"
                 android:layout_width="0dp"
-                android:layout_height="130dp"
+                android:layout_height="180dp"
                 app:layout_constraintTop_toBottomOf="@+id/cl_news"
                 app:layout_constraintStart_toStartOf="parent"
-                android:background="@drawable/bg_grape_corner_20dp"
+                android:background="@drawable/bg_white_corner_20dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
                 app:layout_constraintWidth_percent="0.45">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/right"/>
+                    android:background="@drawable/right_black"/>
+
+                <ImageView
+                    android:id="@+id/iv_exercise"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/exercise"/>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="15dp"
+                    android:text="昨日运动量"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    app:layout_constraintStart_toEndOf="@+id/iv_exercise"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:textSize="14sp"/>
+                <TextView
+                    android:id="@+id/tv_exercise"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:textColor="#707070"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintVertical_bias="0.25"
+                    android:textStyle="bold"
+                    android:textSize="24sp"/>
+
+                <ImageView
+                    android:id="@+id/iv_exercise_consume"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_exercise"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/exercise_consume"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="15dp"
+                    android:text="昨日运动消耗"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/iv_exercise_consume"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_exercise"
+                    android:textSize="14sp"/>
+                <TextView
+                    android:id="@+id/tv_cal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="15dp"
+                    android:textColor="#707070"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:textStyle="bold"
+                    android:textSize="24sp"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_breanth"
+                android:layout_width="0dp"
+                android:layout_height="130dp"
+                app:layout_constraintTop_toBottomOf="@+id/cl_heart"
+                app:layout_constraintStart_toEndOf="@+id/cl_exercise"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/bg_white_corner_20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="15dp"
+                app:layout_constraintWidth_percent="0.45">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/right_black"/>
+
+                <ImageView
+                    android:id="@+id/iv_breath"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/breath"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
-                    android:text="呼吸频率"
-                    android:textColor="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:text="呼吸频率区间"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    app:layout_constraintStart_toEndOf="@+id/iv_breath"
                     app:layout_constraintTop_toTopOf="parent"
                     android:textSize="14sp"/>
                 <TextView
@@ -215,7 +334,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:text=""
-                    android:textColor="@color/white"
+                    android:textColor="#707070"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -228,9 +347,10 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="正常"
-                    android:textColor="@color/white"
+                    android:textColor="#ef7d16"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    android:textStyle="bold"
                     android:textSize="14sp"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -239,30 +359,41 @@
                 android:id="@+id/cl_sleep"
                 android:layout_width="0dp"
                 android:layout_height="130dp"
-                app:layout_constraintTop_toBottomOf="@+id/cl_breanth"
+                app:layout_constraintTop_toBottomOf="@+id/cl_exercise"
                 app:layout_constraintStart_toStartOf="parent"
-                android:background="@drawable/bg_orange_corner_20dp"
+                android:background="@drawable/bg_white_corner_20dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
                 app:layout_constraintWidth_percent="0.45"
                 android:layout_marginBottom="20dp">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/right"/>
+                    android:background="@drawable/right_black"/>
+
+                <ImageView
+                    android:id="@+id/iv_sleep"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/sleep"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="15dp"
-                    android:text="睡眠量"
-                    android:textColor="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:text="昨日睡眠量"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    app:layout_constraintStart_toEndOf="@+id/iv_sleep"
                     app:layout_constraintTop_toTopOf="parent"
                     android:textSize="14sp"/>
                 <TextView
@@ -271,7 +402,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:text="未知"
-                    android:textColor="@color/white"
+                    android:textColor="#707070"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -283,10 +414,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="优秀"
-                    android:textColor="@color/white"
+                    android:text="未知"
+                    android:textColor="#ef7d16"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    android:textStyle="bold"
                     android:textSize="14sp"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -294,29 +426,40 @@
                 android:id="@+id/cl_heart"
                 android:layout_width="0dp"
                 android:layout_height="130dp"
-                app:layout_constraintTop_toBottomOf="@+id/cl_sleep"
-                app:layout_constraintStart_toStartOf="parent"
-                android:background="@drawable/bg_purple_corner_20dp"
+                app:layout_constraintTop_toBottomOf="@+id/cl_temperature"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/bg_white_corner_20dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
                 app:layout_constraintWidth_percent="0.45">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/right"/>
+                    android:background="@drawable/right_black"/>
+
+                <ImageView
+                    android:id="@+id/iv_heart"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/heart"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="15dp"
-                    android:text="心率"
-                    android:textColor="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:text="心率区间"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    app:layout_constraintStart_toEndOf="@+id/iv_heart"
                     app:layout_constraintTop_toTopOf="parent"
                     android:textSize="14sp"/>
                 <TextView
@@ -325,8 +468,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
-                    android:text=""
-                    android:textColor="@color/white"
+                    android:textColor="#707070"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -338,10 +480,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="低风险"
-                    android:textColor="@color/white"
+                    android:text="休息中"
+                    android:textColor="#ef7d16"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    android:textStyle="bold"
                     android:textSize="14sp"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -349,29 +492,42 @@
                 android:id="@+id/cl_temperature"
                 android:layout_width="0dp"
                 android:layout_height="130dp"
-                app:layout_constraintTop_toBottomOf="@+id/cl_heart"
-                app:layout_constraintStart_toStartOf="parent"
-                android:background="@drawable/bg_grape_corner_20dp"
+                app:layout_constraintTop_toBottomOf="@+id/cl_news"
+                app:layout_constraintStart_toEndOf="@+id/cl_exercise"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/bg_white_corner_20dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
                 app:layout_constraintWidth_percent="0.45">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/right"/>
+                    android:background="@drawable/right_black"/>
+
+                <ImageView
+                    android:id="@+id/iv_temperature"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/temperature"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="15dp"
                     android:text="体温"
-                    android:textColor="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    app:layout_constraintStart_toEndOf="@+id/iv_temperature"
                     app:layout_constraintTop_toTopOf="parent"
                     android:textSize="14sp"/>
                 <TextView
@@ -380,7 +536,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
-                    android:textColor="@color/white"
+                    android:textColor="#707070"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -393,107 +549,55 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="健康"
-                    android:textColor="@color/white"
+                    android:textColor="#ef7d16"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    android:textStyle="bold"
                     android:textSize="14sp"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_exercise"
-                android:layout_width="0dp"
-                android:layout_height="180dp"
-                app:layout_constraintTop_toBottomOf="@+id/cl_news"
-                app:layout_constraintStart_toEndOf="@+id/cl_breanth"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:background="@drawable/bg_purple_corner_20dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginTop="15dp"
-                app:layout_constraintWidth_percent="0.45">
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/right"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="15dp"
-                    android:text="今日运动量"
-                    android:textColor="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:textSize="14sp"/>
-                <TextView
-                    android:id="@+id/tv_exercise"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="15dp"
-                    android:textColor="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintVertical_bias="0.25"
-                    android:textStyle="bold"
-                    android:textSize="24sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="15dp"
-                    android:text="今日运动消耗"
-                    android:textColor="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_exercise"
-                    android:textSize="14sp"/>
-                <TextView
-                    android:id="@+id/tv_cal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="15dp"
-                    android:textColor="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:textStyle="bold"
-                    android:textSize="24sp"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_weight"
                 android:layout_width="0dp"
                 android:layout_height="130dp"
-                app:layout_constraintTop_toBottomOf="@+id/cl_exercise"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:background="@drawable/bg_pink_corner_20dp"
+                app:layout_constraintTop_toBottomOf="@+id/cl_sleep"
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@drawable/bg_white_corner_20dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
                 app:layout_constraintWidth_percent="0.45">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/right"/>
+                    android:background="@drawable/right_black"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/iv_weight"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/weight"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:text="体重"
-                    android:textColor="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    app:layout_constraintStart_toEndOf="@+id/iv_weight"
                     app:layout_constraintTop_toTopOf="parent"
                     android:textSize="14sp"/>
                 <TextView
@@ -502,7 +606,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
-                    android:textColor="@color/white"
+                    android:textColor="#707070"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -517,42 +621,56 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="更新"
-                    android:background="@drawable/bg_white_corner_20dp"
+                    android:background="@drawable/bg_orange_corner_20dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:textColor="#FF9966"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     android:textSize="14sp"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_pet_diary"
                 android:layout_width="0dp"
-                android:layout_height="180dp"
-                app:layout_constraintTop_toBottomOf="@+id/cl_weight"
+                android:layout_height="130dp"
+                app:layout_constraintTop_toBottomOf="@+id/cl_breanth"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:background="@drawable/bg_orange_corner_20dp"
+                android:background="@drawable/bg_white_corner_20dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
                 app:layout_constraintWidth_percent="0.45">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/right"/>
+                    android:background="@drawable/right_black"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/iv_diary"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/diary"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="8dp"
                     android:text="宠物日记"
-                    android:textColor="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    app:layout_constraintStart_toEndOf="@+id/iv_diary"
+                    app:layout_constraintTop_toTopOf="@+id/iv_diary"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_diary"
                     android:textSize="14sp"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -560,7 +678,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:text="今日暂无事件..."
-                    android:textColor="@color/white"
+                    android:textColor="#707070"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -574,11 +692,12 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="添加"
-                    android:background="@drawable/bg_white_corner_20dp"
+                    android:background="@drawable/bg_orange_corner_20dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:textColor="#FF9966"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     android:textSize="14sp"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 

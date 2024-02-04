@@ -10,6 +10,7 @@ import com.example.petproject.bean.PetRequest;
 import com.example.petproject.bean.PetResponse;
 import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
+import com.example.petproject.bean.UserInfoResponse;
 
 import java.util.List;
 
@@ -88,6 +89,9 @@ public interface RetrofitService {
     Observable<RemoteResult<Object>> deviceUnBindPet(@Header("Authorization") String authorization, @Body DevicePetRequest request);
 
     @Multipart
-    @POST("/user/upload") // 替换为实际的上传接口路径
+    @POST("/user/upload")
     Observable<RemoteResult<Object>> uploadImage(@Part MultipartBody.Part file);
+
+    @GET("/info/getDetail")
+    Observable<RemoteResult<UserInfoResponse>> getDetail(@Header("Authorization") String authorization);
 }

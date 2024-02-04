@@ -92,7 +92,7 @@
         app:layout_constraintTop_toTopOf="@+id/tv_title_gender"
         app:layout_constraintBottom_toBottomOf="@+id/tv_title_gender"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="28dp"
+        android:layout_marginEnd="35dp"
         android:textColor="#777777"
         android:textSize="17sp"/>
 
