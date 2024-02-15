@@ -6,11 +6,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.petproject.bean.RemoteResult;
 import com.example.petproject.bean.UserInfoResponse;
 import com.example.petproject.retrofit.ResultFunction;
@@ -26,10 +28,11 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class TabFragment5 extends Fragment {
-    private static final String TAG = "TabFragment1";
+    private static final String TAG = "TabFragment5";
     private View view;
     private TextView tv_name;
     private TextView tv_id;
+    private ImageView iv_head;
 
     public TabFragment5() {
         // Required empty public constructor
@@ -71,18 +74,27 @@ public class TabFragment5 extends Fragment {
         });
         tv_name = view.findViewById(R.id.tv_name);
         tv_id = view.findViewById(R.id.tv_id);
+        iv_head = view.findViewById(R.id.iv_head);
+
         view.findViewById(R.id.iv_head).setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(),UserCenterActivity.class);
             intent.putExtra("type",1);
             startActivity(intent);
         });
-        String token = "Bearer " + ConfigPreferences.login_token(getContext());
-        getDetail(token);
+
 
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        String token = "Bearer " + ConfigPreferences.login_token(getContext());
+        getDetail(token);
+    }
+
     private void getDetail(String token) {
+        Log.d(TAG, "getDetail: ");
         RetrofitUtils.getRetrofitService().getDetail(token)
                 .filter(new ResultFunction())
                 .subscribeOn(Schedulers.io())//todo filter
@@ -96,6 +108,8 @@ public class TabFragment5 extends Fragment {
                     public void onNext(@NonNull RemoteResult<UserInfoResponse> result) {
                         Log.d(TAG, "onNext: " + result.data.toString());
                         ConfigPreferences.setName(getContext(), result.data.username);
+                        ConfigPreferences.setID(getContext(), result.data.id);
+                        ConfigPreferences.setAvatar(getContext(), result.data.avatar);
                         if (result.data.gender == 0) {
                             ConfigPreferences.setGender(getContext(), "男");
                         } else if (result.data.gender == 1) {
@@ -105,6 +119,7 @@ public class TabFragment5 extends Fragment {
                         }
                         tv_name.setText(result.data.username);
                         tv_id.setText("ID：" + result.data.id);
+                        Glide.with(getContext()).load("http://47.94.99.63:8087/user/download/" + result.data.avatar).into(iv_head);
                     }
 
                     @Override

@@ -9,8 +9,8 @@ android {
         applicationId "com.example.petproject"
         minSdk 21
         targetSdk 32
-        versionCode 10
-        versionName "1.9"
+        versionCode 11
+        versionName "2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -89,7 +89,9 @@ dependencies {
 
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.22'
 
-
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     //gaode
     //定位功能
     //implementation 'com.amap.api:location:latest.integration'

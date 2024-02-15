@@ -10,6 +10,7 @@ import com.example.petproject.bean.PetRequest;
 import com.example.petproject.bean.PetResponse;
 import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
+import com.example.petproject.bean.UserEditRequest;
 import com.example.petproject.bean.UserInfoResponse;
 
 import java.util.List;
@@ -51,6 +52,9 @@ public interface RetrofitService {
 
     @POST("/user/register")
     Observable<RemoteResult<Object>> register(@Body RegisterRequest request);
+
+    @PUT("/user/edit")
+    Observable<RemoteResult<Object>> userEdit(@Header("Authorization") String authorization, @Body UserEditRequest request);
 
     @POST("/pet/insert")
     Observable<RemoteResult<Object>> petInsert(@Header("Authorization") String authorization, @Body PetRequest request);
@@ -94,4 +98,9 @@ public interface RetrofitService {
 
     @GET("/info/getDetail")
     Observable<RemoteResult<UserInfoResponse>> getDetail(@Header("Authorization") String authorization);
+
+    //查询宠物品种
+    @GET("/petBreed/search")
+    Observable<RemoteResult<Object>> breedSearch(@Header("Authorization") String authorization, @Query("type") int type);
+
 }

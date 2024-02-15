@@ -1,5 +1,6 @@
 package com.example.petproject;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -234,6 +235,15 @@ public class TabFragment3 extends Fragment implements LocationSource,
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.d(TAG, "onHiddenChanged1111: " + hidden);
+        if (!hidden) {
+            startWebSocket();
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         mapView.onPause();
@@ -263,15 +273,24 @@ public class TabFragment3 extends Fragment implements LocationSource,
         if (mListener != null && amapLocation != null) {
             if (amapLocation.getErrorCode() == 0) {
                 this.amapLocation = amapLocation;
-                //mListener.onLocationChanged(amapLocation);// todo 显示系统小蓝点 5.0.0版本以前mListener.onLocationChanged(amapLocation);”可以在地图上显示系统小蓝点。
-                aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude()), 15)); // yourLatitude和yourLongitude是定位得到的经纬度信息
+                mListener.onLocationChanged(amapLocation);// todo 显示系统小蓝点 5.0.0版本以前mListener.onLocationChanged(amapLocation);”可以在地图上显示系统小蓝点。
+                //aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude()), 15)); // yourLatitude和yourLongitude是定位得到的经纬度信息
                 //Log.d("1111", amapLocation.toString());
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
-                //Log.e("1111",errText);
+                Log.e("1111",errText);
             }
-            mlocationClient.stopLocation();
+            //mlocationClient.stopLocation();
         }
+
+        // 处理新的位置信息
+        //LatLng latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
+
+        // 更新定位蓝点的位置
+        //MyLocationStyle myLocationStyle = new MyLocationStyle();
+        //myLocationStyle.myLocation(latLng);
+        //aMap.setMyLocationStyle(myLocationStyle);
+        //aMap.setMyLocationEnabled(true);
     }
 
     /**

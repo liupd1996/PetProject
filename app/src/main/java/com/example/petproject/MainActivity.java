@@ -158,6 +158,9 @@ public class MainActivity extends BaseActivity {
         titles.add("我的");
         MyFragmentPagerAdapter2 myFragmentPagerAdapter = new MyFragmentPagerAdapter2(getSupportFragmentManager(), fragments, titles);
         viewPager.setAdapter(myFragmentPagerAdapter);
+
+        viewPager.setCurrentItem(2);
+
         tabLayout.setupWithViewPager(viewPager);
         TabLayout.Tab tab1 = tabLayout.getTabAt(0);
         tab1.setIcon(R.drawable.data_selector); // 设置图标

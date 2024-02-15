@@ -20,10 +20,12 @@ import android.widget.TextView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.petproject.base.BaseActivity;
 import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
+import com.example.petproject.bean.UserEditRequest;
 import com.example.petproject.customview.CircularImageView;
 import com.example.petproject.dialog.AvatorFragment;
 import com.example.petproject.dialog.PetTypeBottomSheetFragment;
@@ -54,6 +56,7 @@ public class UserCenterActivity extends BaseActivity {
     private EditText mTvName;
     private PetTypeBottomSheetFragment fragmentGender;
     private int indexGender = -1;
+    private String avatar = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,22 +98,33 @@ public class UserCenterActivity extends BaseActivity {
         });
 
         Intent intentResult = getIntent();
-        int type = intentResult.getIntExtra("type",-1);//type == 1 ,编辑个人信息
+        int type = intentResult.getIntExtra("type", -1);//type == 1 ,编辑个人信息
         Button btn_register = findViewById(R.id.btn_register);
         if (type == 1) {
             btn_register.setText("完成");
             mTvName.setText(ConfigPreferences.name(UserCenterActivity.this));
-            mTvGender.setText(ConfigPreferences.gender(UserCenterActivity.this));
+            String gender = ConfigPreferences.gender(UserCenterActivity.this);
+            mTvGender.setText(gender);
+            if (gender.equals("男")) {
+                indexGender = 0;
+            } else if (gender.equals("女")) {
+                indexGender = 1;
+            } else {
+                indexGender = -1;
+            }
+            avatar = ConfigPreferences.avatar(UserCenterActivity.this);
+            Glide.with(UserCenterActivity.this).load("http://47.94.99.63:8087/user/download/" + avatar).into(imageView);
         }
         btn_register.setOnClickListener(v -> {
-            if (type == 1) {
-                ToastUtils.customToast(UserCenterActivity.this,"编辑接口升级中");
-                return;
-            }
+//            if (type == 1) {
+//                ToastUtils.customToast(UserCenterActivity.this,"编辑接口升级中");
+//                return;
+//            }
             Intent intent = getIntent();
             String phone = intent.getStringExtra("phone");
             String smsCode = intent.getStringExtra("smsCode");
             String name = mTvName.getText().toString();
+            String id = ConfigPreferences._id(UserCenterActivity.this);
             if (TextUtils.isEmpty(name)) {
                 ToastUtils.customToast(UserCenterActivity.this, "昵称不能为空");
                 return;
@@ -119,7 +133,11 @@ public class UserCenterActivity extends BaseActivity {
                 ToastUtils.customToast(UserCenterActivity.this, "请选择性别");
                 return;
             }
-            register(indexGender,phone, smsCode, name);
+            if (type == 1) {
+                edit(indexGender, id, avatar, name);
+            } else {
+                register(indexGender, phone, smsCode, name);
+            }
         });
     }
 
@@ -148,6 +166,35 @@ public class UserCenterActivity extends BaseActivity {
                     @Override
                     public void onNext(@NonNull RemoteResult<Object> result) {
                         login(phone, smsCode);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        ToastUtils.customToast(UserCenterActivity.this, ExceptionHandle.handleException(e).message);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
+    private void edit(int gender, String id, String avatar, String name) {
+        Log.d(TAG, "edit gender: " + gender + "--id:" + id + "--avatar:" + avatar + "--name:" + name);
+        String token = "Bearer " + ConfigPreferences.login_token(UserCenterActivity.this);
+        RetrofitUtils.getRetrofitService().userEdit(token, new UserEditRequest(avatar, gender, id, name))
+                .filter(new ResultFunction())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RemoteResult<Object>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(@NonNull RemoteResult<Object> result) {
+                        ToastUtils.customToast(UserCenterActivity.this, "修改成功");
+                        finish();
                     }
 
                     @Override
@@ -210,10 +257,11 @@ public class UserCenterActivity extends BaseActivity {
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Log.d(TAG, "dispatchTakePictureIntent: " + takePictureIntent);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         } else {
-            ToastUtils.customToast(UserCenterActivity.this,"未找到相机应用");
+            ToastUtils.customToast(UserCenterActivity.this, "未找到相机应用");
         }
     }
 
@@ -265,6 +313,8 @@ public class UserCenterActivity extends BaseActivity {
 
                     @Override
                     public void onNext(@NonNull RemoteResult<Object> result) {
+                        avatar = file.getName();
+                        Log.d(TAG, "onNext1111: " + avatar);
                         ToastUtils.customToast(UserCenterActivity.this, "上传成功");
                     }
 

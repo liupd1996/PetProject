@@ -188,6 +188,8 @@ public class AddPetActivity extends BaseActivity {
                 petUpdate(token, request);
             }
         });
+        String token = "Bearer " + ConfigPreferences.login_token(AddPetActivity.this);
+        breedSearch(token);
     }
 
     public String[] permissions = new String[]{Manifest.permission.CAMERA};
@@ -227,6 +229,42 @@ public class AddPetActivity extends BaseActivity {
                             finish();
                         }
                         finish();
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        String message = ExceptionHandle.handleException(e).message;
+                        if (message.equals("invalid_token")) {
+                            ConfigPreferences.setLoginName(AddPetActivity.this, "");
+                            ConfigPreferences.setLoginToken(AddPetActivity.this, "");
+                            startActivity(new Intent(AddPetActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            ToastUtils.customToast(AddPetActivity.this, message);
+                        }
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
+
+    private void breedSearch(String token) {//todo pet update
+        RetrofitUtils.getRetrofitService().breedSearch(token,0)
+                .filter(new ResultFunction())
+                .subscribeOn(Schedulers.io())//todo add edit
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RemoteResult<Object>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(@NonNull RemoteResult<Object> result) {
+
                     }
 
                     @Override
