@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#D3D3D3" /> <!-- 设置矩形的填充颜色，可以根据需要修改 -->
+    <corners
+        android:bottomRightRadius="20dp"
+        android:topRightRadius="20dp" />
+</shape>

@@ -13,4 +13,9 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <style name="BoldTextAppearance">
+        <item name="android:textStyle">bold</item>
+        <!-- 其他文本属性可以在这里添加 -->
+    </style>
+
 </resources>

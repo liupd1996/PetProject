@@ -4,6 +4,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/agree_selector.xml" value="0.221" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bar_no_selected_left.xml" value="0.2345" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bar_no_selected_right.xml" value="0.2345" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bar_selected.xml" value="0.2345" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bar_selected_right.xml" value="0.2345" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bar_selector.xml" value="0.2345" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bar_selector_colort.xml" value="0.2345" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bar_selector_right.xml" value="0.2345" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_grape_corner_20dp.xml" value="0.1905" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_gray2_corner_10dp.xml" value="0.1755" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_gray_corner_10dp.xml" value="0.229" />
@@ -37,6 +44,7 @@
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_add_pet.xml" value="0.2463768115942029" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_bind.xml" value="0.2463768115942029" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_data.xml" value="0.2694746376811594" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_detail.xml" value="0.2708333333333333" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_device.xml" value="0.2708333333333333" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_device_info.xml" value="0.22135416666666666" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_login.xml" value="0.20199275362318841" />
@@ -46,6 +54,7 @@
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_setting.xml" value="0.2694746376811594" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_user_center.xml" value="0.2546875" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_webview.xml" value="0.31302083333333336" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/activity_weight.xml" value="0.2546875" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/avator_select.xml" value="0.2563405797101449" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/bottom_sheet_pet_type.xml" value="0.2563405797101449" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/device_item.xml" value="0.2463768115942029" />
@@ -57,6 +66,7 @@
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab5.xml" value="0.20199275362318841" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab6.xml" value="0.2418478260869565" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/header_bar.xml" value="0.4661458333333333" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/history_item.xml" value="0.25885416666666666" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/layout_toast.xml" value="0.4661458333333333" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/myoval.xml" value="0.2694746376811594" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/pet_item.xml" value="0.2563405797101449" />

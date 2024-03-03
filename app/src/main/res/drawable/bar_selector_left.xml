@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+  <!-- 未选中状态 -->
+  <item android:drawable="@drawable/bar_selected_left" android:state_selected="true"/>
+  <!-- 选中状态 -->
+  <item android:drawable="@drawable/bar_no_selected_left" android:state_selected="false"/>
+</selector>

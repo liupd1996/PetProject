@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,6 +23,7 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.petproject.base.BaseActivity;
+import com.example.petproject.bean.AvatarResponse;
 import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
@@ -277,14 +279,51 @@ public class UserCenterActivity extends BaseActivity {
 
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri selectedImage = data.getData();
-            imageView.setImageURI(selectedImage);
-            uploadImage(selectedImage);
+            Bitmap selectedBitmap = getBitmapFromUri(selectedImage);
+            if (selectedBitmap == null) {
+                ToastUtils.customToast(UserCenterActivity.this,"图片选择失败");
+                return;
+            }
+            Bitmap compressBitmap = compressBitmap(selectedBitmap);
+            imageView.setImageBitmap(compressBitmap);
+            uploadImage(getImageUri(getApplicationContext(), compressBitmap));
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            imageView.setImageBitmap(imageBitmap);
-            uploadImage(getImageUri(getApplicationContext(), imageBitmap));
+            Bitmap compressBitmap = compressBitmap(imageBitmap);
+            imageView.setImageBitmap(compressBitmap);
+            uploadImage(getImageUri(getApplicationContext(), compressBitmap));
         }
+    }
+
+    private Bitmap getBitmapFromUri(Uri uri) {
+        try {
+            // Load bitmap from the URI
+            return MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private Bitmap compressBitmap(Bitmap bitmap) {
+        // 设置压缩参数
+        int maxWidth = 300;
+        int maxHeight = 300;
+
+        // 获取原始图像的宽高
+        int originalWidth = bitmap.getWidth();
+        int originalHeight = bitmap.getHeight();
+
+        // 计算缩放比例
+        float scale = Math.min((float) maxWidth / originalWidth, (float) maxHeight / originalHeight);
+
+        // 创建Matrix进行缩放
+        Matrix matrix = new Matrix();
+        matrix.postScale(scale, scale);
+
+        // 使用Matrix进行缩放
+        return Bitmap.createBitmap(bitmap, 0, 0, originalWidth, originalHeight, matrix, true);
     }
 
     // 将Bitmap转换为Uri
@@ -306,15 +345,15 @@ public class UserCenterActivity extends BaseActivity {
                 .filter(new ResultFunction())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<RemoteResult<Object>>() {
+                .subscribe(new Observer<RemoteResult<AvatarResponse>>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                     }
 
                     @Override
-                    public void onNext(@NonNull RemoteResult<Object> result) {
-                        avatar = file.getName();
-                        Log.d(TAG, "onNext1111: " + avatar);
+                    public void onNext(@NonNull RemoteResult<AvatarResponse> result) {
+                        avatar = result.data.fileName;
+                        Glide.with(UserCenterActivity.this).load(result.data.fileDownloadUri).into(imageView);
                         ToastUtils.customToast(UserCenterActivity.this, "上传成功");
                     }
 

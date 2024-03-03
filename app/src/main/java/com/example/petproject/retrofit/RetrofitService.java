@@ -1,5 +1,7 @@
 package com.example.petproject.retrofit;
 
+import com.example.petproject.bean.AvatarResponse;
+import com.example.petproject.bean.CountResponse;
 import com.example.petproject.bean.DeleteDeviceRequest;
 import com.example.petproject.bean.DevicePetRequest;
 import com.example.petproject.bean.DeviceRequest;
@@ -8,12 +10,16 @@ import com.example.petproject.bean.InstallResponse;
 import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.PetRequest;
 import com.example.petproject.bean.PetResponse;
+import com.example.petproject.bean.PetWeightRequest;
 import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
 import com.example.petproject.bean.UserEditRequest;
 import com.example.petproject.bean.UserInfoResponse;
+import com.example.petproject.bean.WeightResponse;
+import com.example.petproject.bean.WeightSearchResponse;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
@@ -94,7 +100,7 @@ public interface RetrofitService {
 
     @Multipart
     @POST("/user/upload")
-    Observable<RemoteResult<Object>> uploadImage(@Part MultipartBody.Part file);
+    Observable<RemoteResult<AvatarResponse>> uploadImage(@Part MultipartBody.Part file);
 
     @GET("/info/getDetail")
     Observable<RemoteResult<UserInfoResponse>> getDetail(@Header("Authorization") String authorization);
@@ -102,5 +108,33 @@ public interface RetrofitService {
     //查询宠物品种
     @GET("/petBreed/search")
     Observable<RemoteResult<Object>> breedSearch(@Header("Authorization") String authorization, @Query("type") int type);
+
+
+    @GET("/count/breathe")//呼吸统计
+    Observable<RemoteResult<Object>> breatheCount(@Header("Authorization") String authorization, @Query("type") int type, @Query("deviceId") String deviceId);
+
+    @GET("/count/heartRate")//心跳统计
+    Observable<RemoteResult<Object>> heartRateCount(@Header("Authorization") String authorization, @Query("type") int type, @Query("deviceId") String deviceId);
+
+    @GET("/count/motion")//运动统计
+    Observable<RemoteResult<Object>> motionCount(@Header("Authorization") String authorization, @Query("type") int type, @Query("deviceId") String deviceId);
+
+    @GET("/count/sleep")//睡眠统计
+    Observable<RemoteResult<Object>> sleepCount(@Header("Authorization") String authorization, @Query("type") int type, @Query("deviceId") String deviceId);
+
+    @GET("/count/temperature")//温度统计
+    Observable<RemoteResult<Object>> temperatureCount(@Header("Authorization") String authorization, @Query("type") int type, @Query("deviceId") String deviceId);
+
+    @GET("/count/all")//温度统计
+    Observable<RemoteResult<List<CountResponse>>> countAll(@Header("Authorization") String authorization, @Query("type") int type, @Query("deviceId") String deviceId);
+
+    @GET("/pet/searchWeight")//体重搜索
+    Observable<RemoteResult<WeightSearchResponse>> searchWeight(@Header("Authorization") String authorization, @Query("pageSize") int pageSize, @Query("petId") String petId );
+
+    @POST("/pet/insertWeight")
+    Observable<RemoteResult<Object>> addWeight(@Header("Authorization") String authorization, @Body PetWeightRequest request);
+
+
+
 
 }

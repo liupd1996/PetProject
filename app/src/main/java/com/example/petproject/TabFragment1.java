@@ -17,10 +17,12 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.petproject.adapter.HistoryItem;
 import com.example.petproject.bean.JsonRequest;
 import com.example.petproject.bean.JsonRequest.Data;
 import com.example.petproject.bean.PetResponse;
 import com.example.petproject.bean.RemoteResult;
+import com.example.petproject.bean.WeightSearchResponse;
 import com.example.petproject.customview.BatteryView;
 import com.example.petproject.dialog.SureCancelDialog;
 import com.example.petproject.retrofit.ResultFunction;
@@ -68,6 +70,10 @@ public class TabFragment1 extends Fragment {
     private SureCancelDialog mPetDialog;
     private SureCancelDialog mDeviceDialog;
     private String deviceId = "";
+    private String _Id = "";
+    private String pet_Id = "";
+    private String weight;
+    private String weight_num;
 
 
     public TabFragment1() {
@@ -90,7 +96,7 @@ public class TabFragment1 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView1111: ");
+        Log.d(TAG, "onCreateView10086: ");
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tab1, container, false);
         view.findViewById(R.id.cl_news).setOnClickListener(view -> {
@@ -98,27 +104,47 @@ public class TabFragment1 extends Fragment {
             startActivity(intent);
         });
         view.findViewById(R.id.cl_breanth).setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), DataActivity.class);
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
+            intent.putExtra("type", 1);
+            intent.putExtra("deviceId", _Id);
+            intent.putExtra("message", mExtendParamDesc);
             startActivity(intent);
         });
         view.findViewById(R.id.cl_sleep).setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), DataActivity.class);
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
+            intent.putExtra("type", 2);
+            intent.putExtra("deviceId", _Id);
+            intent.putExtra("message", mExtendParamDesc);
             startActivity(intent);
         });
         view.findViewById(R.id.cl_heart).setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), DataActivity.class);
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
+            intent.putExtra("type", 3);
+            intent.putExtra("deviceId", _Id);
+            intent.putExtra("message", mExtendParamDesc);
             startActivity(intent);
         });
         view.findViewById(R.id.cl_temperature).setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), DataActivity.class);
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
+            intent.putExtra("type", 4);
+            intent.putExtra("deviceId", _Id);
+            intent.putExtra("message", mExtendParamDesc);
             startActivity(intent);
         });
-        view.findViewById(R.id.tv_exercise).setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), DataActivity.class);
+        view.findViewById(R.id.cl_exercise).setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
+            intent.putExtra("type", 5);
+            intent.putExtra("deviceId", _Id);
+            intent.putExtra("message", mExtendParamDesc);
             startActivity(intent);
         });
         view.findViewById(R.id.btn_weight).setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), DataActivity.class);
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
+            intent.putExtra("type", 7);
+            intent.putExtra("deviceId", _Id);
+            intent.putExtra("message", mExtendParamDesc);
+            intent.putExtra("weight", weight_num);
+            intent.putExtra("pet_Id", pet_Id);
             startActivity(intent);
         });
         view.findViewById(R.id.btn_diary).setOnClickListener(view -> {
@@ -166,6 +192,60 @@ public class TabFragment1 extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        String token = "Bearer " + ConfigPreferences.login_token(getContext());
+        searchWeight(token, pet_Id);
+    }
+
+    private void searchWeight(String token, String pet_Id) {//todo pet update
+        if (TextUtils.isEmpty(pet_Id)) {
+            return;
+        }
+        Log.d("1111", "searchWeight pet_Id----" + pet_Id);
+        RetrofitUtils.getRetrofitService().searchWeight(token, 7, pet_Id)
+                .filter(new ResultFunction())
+                .subscribeOn(Schedulers.io())//todo add edit
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RemoteResult<WeightSearchResponse>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(@NonNull RemoteResult<WeightSearchResponse> result) {
+                        Log.d("7777", "onNext WeightResponse: " + result.data.records.size());
+                        if (result.data.records.size() > 0) {
+                            weight_num = result.data.records.get(0).weight;
+                            weight = weight_num + " 千克";
+                            tv_weight.setText(getTextSizeSpan(weight, 0, weight_num.length() + 1));
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        Log.d("7777", "onError: ");
+                        String message = ExceptionHandle.handleException(e).message;
+                        if (message.equals("invalid_token")) {
+                            ConfigPreferences.setLoginName(getContext(), "");
+                            ConfigPreferences.setLoginToken(getContext(), "");
+                            startActivity(new Intent(getContext(), LoginActivity.class));
+                            getActivity().finish();
+                        } else {
+                            ToastUtils.customToast(getContext(), message);
+                        }
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
     }
 
 
@@ -226,7 +306,7 @@ public class TabFragment1 extends Fragment {
                     requireActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ToastUtils.customToast(getContext(),"获取宠物最新数据成功");
+                            ToastUtils.customToast(getContext(), "获取宠物最新数据成功");
                         }
                     });
                 }
@@ -245,7 +325,7 @@ public class TabFragment1 extends Fragment {
                     requireActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ToastUtils.customToast(getContext(),"获取宠物最新数据失败");
+                            ToastUtils.customToast(getContext(), "获取宠物最新数据失败");
                         }
                     });
                 }
@@ -268,21 +348,21 @@ public class TabFragment1 extends Fragment {
         String todayKm = DataUtils.extractVTodayKm(mExtendParamDesc);
         TextView tv_exercise = view.findViewById(R.id.tv_exercise);
         String fullTodayKm = todayKm + " 千米";
-        tv_exercise.setText(getTextSizeSpan(fullTodayKm, 0, fullTodayKm.length()-2));
+        tv_exercise.setText(getTextSizeSpan(fullTodayKm, 0, fullTodayKm.length() - 2));
         //卡路里
 
         double todayKm2 = Double.parseDouble(todayKm);
         int todayCalorieConsumption = (int) (2.5 * todayKm2 * 1.063);
         TextView tv_cal = view.findViewById(R.id.tv_cal);
         String fullTodayCalorieConsumption = todayCalorieConsumption + " 卡路里";
-        tv_cal.setText(getTextSizeSpan(fullTodayCalorieConsumption, 0, fullTodayCalorieConsumption.length()-3));
+        tv_cal.setText(getTextSizeSpan(fullTodayCalorieConsumption, 0, fullTodayCalorieConsumption.length() - 3));
         //体温
         double tempature = DataUtils.extractTemperatures(mExtendParamDesc);
         DecimalFormat decimalFormat = new DecimalFormat("#.#");
         String formattedTemperature = decimalFormat.format(tempature);
         TextView tv_temperature = view.findViewById(R.id.tv_temperature);
         String temperature = formattedTemperature + " 摄氏度";
-        tv_temperature.setText(getTextSizeSpan(temperature,0,temperature.length()-3));
+        tv_temperature.setText(getTextSizeSpan(temperature, 0, temperature.length() - 3));
         DataUtils.testRegexMatch(mExtendParamDesc);
 
         //行为检测
@@ -324,8 +404,8 @@ public class TabFragment1 extends Fragment {
         }
 
         tv_act.setText(petPosture);
-        tv_breath.setText(getTextSizeSpan(respiratorRate,0,respiratorRate.length()-3));
-        tv_heart.setText(getTextSizeSpan(heartRate,0,heartRate.length()-3));
+        tv_breath.setText(getTextSizeSpan(respiratorRate, 0, respiratorRate.length() - 3));
+        tv_heart.setText(getTextSizeSpan(heartRate, 0, heartRate.length() - 3));
         Log.d(TAG, "updateView: " + voltage + "--:" + tempature);
     }
 
@@ -380,14 +460,18 @@ public class TabFragment1 extends Fragment {
         if (filterList.size() != 0) {
             petResponse = filterList.get(0);
             deviceId = petResponse.deviceName;
+            _Id = petResponse.deviceId;
+            pet_Id = petResponse.id;
+            Log.d(TAG, "updateView9999:" + pet_Id);
             startWebSocket(0);
         } else {
             petResponse = list.get(0);
         }
         tv_name.setText(petResponse.name);
 
-        String weight = petResponse.weight + " 千克";
-        tv_weight.setText(getTextSizeSpan(weight,0,petResponse.weight.length() + 1));
+        weight = petResponse.weight + " 千克";
+        weight_num = petResponse.weight;
+        tv_weight.setText(getTextSizeSpan(weight, 0, petResponse.weight.length() + 1));
         if (petResponse.type == 0) {
             tv_birth.setText("猫猫");
             avatar.setImageResource(R.drawable.cat_default);
