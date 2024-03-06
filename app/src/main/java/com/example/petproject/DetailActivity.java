@@ -171,6 +171,7 @@ public class DetailActivity extends BaseActivity {
                 tv_weight.setText(getTextSizeSpan(weight, 0, weight.length() - 3));
                 findViewById(R.id.cl_title).setVisibility(View.VISIBLE);
                 findViewById(R.id.tv_weight).setVisibility(View.VISIBLE);
+                findViewById(R.id.btn_update).setVisibility(View.VISIBLE);
                 findViewById(R.id.wheelPicker).setVisibility(View.GONE);
                 findViewById(R.id.tv_wheel_kg).setVisibility(View.GONE);
                 break;

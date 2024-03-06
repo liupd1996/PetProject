@@ -155,7 +155,8 @@
             android:text="更新"
             android:textColor="#EF7D46"
             android:textStyle="bold"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:visibility="gone"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
