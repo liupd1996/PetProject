@@ -336,7 +336,8 @@ public class TabFragment1 extends Fragment {
     }
 
     private void updateView(String mExtendParamDesc) {
-        double voltage = DataUtils.getBatteryPercentage(mExtendParamDesc);
+        //double voltage = DataUtils.getBatteryPercentage(mExtendParamDesc);
+        double voltage = DataUtils.extractBattery(mExtendParamDesc);
         //String formattedValue = String.format("%.2f", voltage);
         TextView tv_battery = view.findViewById(R.id.tv_battery);
         tv_battery.setText("电池电量:" + (int) voltage + "%");

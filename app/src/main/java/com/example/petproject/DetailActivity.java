@@ -256,7 +256,9 @@ public class DetailActivity extends BaseActivity {
                     @Override
                     public void onNext(@NonNull RemoteResult<List<CountResponse>> result) {
                         Log.d("7777", "onNext: " + result.data.toString());
-                        Log.d("7777", "onNext: " + result.data.get(0).toString());
+                        if (result.data.size() > 0) {
+                            Log.d("7777", "onNext: " + result.data.get(0).toString());
+                        }
                         mListHistory1 = getHistoryList(result.data, type);
                         mAdapter.setList(mListHistory1);
                         updateView(mExtendParamDesc, type);

@@ -52,6 +52,22 @@ public class DataUtils {
         }
     }
 
+    public static double extractBattery(String inputString) {
+
+        // 使用Pattern类编译正则表达式模式
+        Pattern r = Pattern.compile("电量:(\\d+)%?");
+        // 创建Matcher对象
+        Matcher m = r.matcher(inputString);
+
+        // 查找匹配的电量值部分
+        if (m.find()) {
+            // 提取匹配的电量值
+            return Double.parseDouble(m.group(1));
+        } else {
+            return 0;
+        }
+    }
+
     public static double extractXYZ(String inputString) {
         // 定义正则表达式匹配模式
 

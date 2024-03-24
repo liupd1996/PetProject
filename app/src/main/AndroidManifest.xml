@@ -43,6 +43,11 @@
         android:theme="@style/BaseTheme"
         tools:targetApi="31">
         <activity
+            android:name="com.amap.api.navi.AmapRouteActivity"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation" />
+
+        <activity
             android:name=".WeightActivity"
             android:exported="false" />
         <activity
