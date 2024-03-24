@@ -37,11 +37,12 @@
                 android:textColor="@color/black"
                 android:paddingStart="24dp"
                 android:paddingEnd="24dp"
-                android:hint="请输入标题"
+                android:hint="请输入电子围栏范围（单位m）"
                 android:textColorHint="#E5E5E5"
                 android:singleLine="true"
                 android:background="@null"
-                android:longClickable="false"/>
+                android:longClickable="false"
+                android:inputType="number"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

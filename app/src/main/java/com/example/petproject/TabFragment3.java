@@ -1,9 +1,14 @@
 package com.example.petproject;
 
-import android.content.Context;
+import static androidx.core.content.ContextCompat.getSystemService;
+
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,11 +17,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import com.amap.api.location.AMapLocation;
@@ -25,14 +28,14 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.CoordinateConverter;
 import com.amap.api.location.DPoint;
-
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
-import com.amap.api.maps.MapView;
 import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.Circle;
+import com.amap.api.maps.model.CircleOptions;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -51,6 +54,7 @@ import com.example.petproject.bean.JsonRequest;
 import com.example.petproject.bean.PetResponse;
 import com.example.petproject.bean.RemoteResult;
 import com.example.petproject.dialog.PetHospDialog;
+import com.example.petproject.dialog.RemindDialog;
 import com.example.petproject.dialog.SureCancelDialog;
 import com.example.petproject.retrofit.ResultFunction;
 import com.example.petproject.retrofit.RetrofitUtils;
@@ -89,14 +93,20 @@ public class TabFragment3 extends Fragment implements LocationSource,
     WebSocketClient mWebSocketClient;
     private double longitude = -1;
     private double latitude = -1;
+    private int fence_distance = -1;
+    LatLng fence_latLng = null;
     private Marker marker;
     private Marker markerHosp;
-    private boolean mShowHospital = false;               //是否显示附近医院
+    private boolean mShowHospital = false;  //是否显示附近医院
+    private boolean mShowCircle = false;    //是否显示电子围栏
+    private boolean mSetCircle = false;    //是否设置电子围栏
     private SureCancelDialog mPetDialog;
     private SureCancelDialog mDeviceDialog;
+    private RemindDialog mRemindDialog;
 
     private List<Marker>  mymarkerlist = new ArrayList<>();
     private HashMap<Marker,Float> mydistance = new HashMap<>();         //创建距离映射
+    private Circle circle;       //电子围栏
 
     public TabFragment3() {
         // Required empty public constructor
@@ -140,33 +150,94 @@ public class TabFragment3 extends Fragment implements LocationSource,
                 aMap.setMyLocationEnabled(true);
                 aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mAmapLocation.getLatitude(), mAmapLocation.getLongitude()), 15)); // yourLatitude和yourLongitude是定位得到的经纬度信息
                 mHandler.removeCallbacks(mRunnable);
-                ToastUtils.continuousToast(getContext(), "本机定位中...");
+                ToastUtils.customToast(getContext(), "本机定位中...");
             } else {
-                ToastUtils.continuousToast(getContext(), "设备定位中请稍后...");
+                ToastUtils.customToast(getContext(), "设备定位中请稍后...");
             }
         });
 
         view.findViewById(R.id.cl_only).setOnClickListener(view -> {
-            ToastUtils.continuousToast(getContext(), "功能升级中");
+            ToastUtils.customToast(getContext(), "功能升级中");
         });
         view.findViewById(R.id.cl_market).setOnClickListener(view -> {
             if (mAmapLocation == null) {
-                ToastUtils.continuousToast(getContext(), "手机定位中...");
+                ToastUtils.customToast(getContext(), "手机定位中...");
                 return;
             }
             doHospitalSearch();
             aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mAmapLocation.getLatitude(),mAmapLocation.getLongitude()),13));
         });
+        View cl_close_fence = view.findViewById(R.id.cl_close_fence);
         view.findViewById(R.id.cl_fence).setOnClickListener(view -> {
-            ToastUtils.continuousToast(getContext(), "功能升级中");
+            if (!mSetCircle) {
+                SureCancelDialog circleDialog = SureCancelDialog.newInstance("设置电子围栏", "取消", "确定");
+                circleDialog.setLLEditVisible();
+                circleDialog.show(getActivity().getSupportFragmentManager(), "circleDialog");
+                circleDialog.setOnCancelListener(new SureCancelDialog.OnSureCancelListener() {
+                    @Override
+                    public void onCancel() {
+                        circleDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onSureListener(String text) {
+                        if (text.isEmpty() || Integer.parseInt(text) <= 40) {
+                            ToastUtils.customToast(getContext(), "电子围栏半径大于40m,小于1000m");
+                        } else if (Integer.parseInt(text) >= 1000) {
+                            ToastUtils.customToast(getContext(), "电子围栏半径大于40m,小于1000m");
+                        } else {
+                            if (latitude == -1 || longitude == -1) {
+                                //ToastUtils.customToast(getContext(), "等待设备连接，请稍后");
+                                ToastUtils.customToast(getContext(), "宠物未定位");
+                                return;
+                            }
+                            fence_distance = Integer.parseInt(text);
+                            //设置电子围栏的可见线
+                            fence_latLng = convertGPS(latitude, longitude);
+                            CircleOptions circleOptions = new CircleOptions().
+                                    center(fence_latLng).
+                                    radius(Integer.parseInt(text)).
+                                    fillColor(Color.argb((int) (0.3 * 255), 220, 220, 220)).
+                                    strokeColor(Color.BLUE).
+                                    strokeWidth(6);
+                            circle = aMap.addCircle(circleOptions);
+                            mSetCircle = true;
+                            cl_close_fence.setVisibility(View.VISIBLE);
+                        }
+                        circleDialog.dismiss();
+                    }
+                });
+            } else {
+                //围栏不可见
+                if (mShowCircle) {
+                    circle.setVisible(false);
+                    mShowCircle = false;
+                } else {
+                    circle.setVisible(true);
+                    mShowCircle = true;
+                }
+            }
+        });
+        cl_close_fence.setOnClickListener(view -> {
+            circle.remove();
+            // 点击差取消围栏
+            mSetCircle = false;
+            mShowCircle = false;
+            fence_latLng = null;
+            fence_distance = -1;
+            cl_close_fence.setVisibility(View.GONE);
         });
         view.findViewById(R.id.cl_find).setOnClickListener(view -> {
             //ToastUtils.continuousToast(getContext(), "功能升级中");
             //构建导航组件配置类，没有传入起点，所以起点默认为 “我的位置”
-            Log.d(TAG, "onCreateView: " + this.mAmapLocation.toString());
+            if (latitude == -1 || longitude == -1) {
+                //ToastUtils.customToast(getContext(), "等待设备连接，请稍后");
+                ToastUtils.customToast(getContext(), "宠物未定位");
+                return;
+            }
             LatLng latLng = convertGPS(latitude, longitude);
             if (latLng == null) {
-                ToastUtils.customToast(getContext(), "宠物未定位");
+                ToastUtils.customToast(getContext(), "经纬度转换失败");
                 return;
             }
             if (this.mAmapLocation == null) {
@@ -211,7 +282,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
                 startActivity(intent);
             }
         });
-
+        mRemindDialog = new RemindDialog();
         return view;
     }
 
@@ -331,6 +402,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
         Log.d(TAG, "onHiddenChanged1111: " + hidden);
         if (!hidden) {
             startWebSocket();
+            judgeCircle();
         }
     }
 
@@ -477,7 +549,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
                         Log.d(TAG, "1111: " + "Longitude: " + longitude + ", Latitude: " + latitude);
                         // 输出字段值
                         setPosition(latitude, longitude);
-
+                        judgeCircle();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -496,6 +568,35 @@ public class TabFragment3 extends Fragment implements LocationSource,
         };
 
         mWebSocketClient.connect();
+    }
+
+    private void judgeCircle() {
+        if (fence_latLng == null || fence_distance == -1 || latitude == -1 || longitude == -1 || mAmapLocation == null) {
+            return;
+        }
+        if (!mSetCircle) {//没有设置电子围栏不进行判断
+            return;
+        }
+        LatLng latLngPet = convertGPS(latitude, longitude);
+        float distance = AMapUtils.calculateLineDistance(fence_latLng, latLngPet);
+        if (distance * 1.1 > fence_distance) {
+            NotificationManager manger;
+            manger = (NotificationManager) getSystemService(getContext(), NotificationManager.class);
+            if(Build.VERSION.SDK_INT>Build.VERSION_CODES.O){
+                NotificationChannel notificationChannel = new NotificationChannel("PANG",
+                        "测试通知",NotificationManager.IMPORTANCE_HIGH);
+                manger.createNotificationChannel(notificationChannel);
+            }
+            Notification notification = new NotificationCompat.Builder(getContext(), "PANG")
+                    .setContentTitle("宠物通知")
+                    .setContentText("注意！您的宠物离开了电子围栏")
+                    .setSmallIcon(R.drawable.footprint)
+                    .build();
+            manger.notify(1, notification);
+            if (mRemindDialog != null && mRemindDialog.getDialog() != null && !mRemindDialog.getDialog().isShowing()) {
+                mRemindDialog.show(getActivity().getSupportFragmentManager(), "mRemindDialog");
+            }
+        }
     }
 
 
@@ -542,10 +643,17 @@ public class TabFragment3 extends Fragment implements LocationSource,
             return null;
         }
         CoordinateConverter converter = new CoordinateConverter(getContext());
-// CoordType.GPS 待转换坐标类型
         converter.from(CoordinateConverter.CoordType.GPS);
-// sourceLatLng待转换坐标点 LatLng类型
-        return new LatLng(latitude, longitude);
+        LatLng latLng = new LatLng(latitude, longitude);
+        try {
+            converter.coord(new DPoint(latLng.latitude, latLng.longitude));
+            DPoint dPoint = converter.convert();
+            return new LatLng(dPoint.getLatitude(), dPoint.getLongitude());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 
