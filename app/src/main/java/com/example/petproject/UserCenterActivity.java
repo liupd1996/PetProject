@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,6 +23,7 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.example.petproject.base.BaseActivity;
 import com.example.petproject.bean.AvatarResponse;
+import com.example.petproject.bean.LoginRequest;
 import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
@@ -36,7 +36,6 @@ import com.example.petproject.retrofit.RetrofitUtils;
 import com.example.petproject.utils.ConfigPreferences;
 import com.example.petproject.utils.ExceptionHandle;
 import com.example.petproject.utils.ToastUtils;
-import com.example.petproject.utils.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,7 +44,6 @@ import java.io.IOException;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
@@ -115,7 +113,7 @@ public class UserCenterActivity extends BaseActivity {
                 indexGender = -1;
             }
             avatar = ConfigPreferences.avatar(UserCenterActivity.this);
-            Glide.with(UserCenterActivity.this).load("http://47.94.99.63:8087/user/download/" + avatar).into(imageView);
+            Glide.with(UserCenterActivity.this).load("http://47.94.99.63:8088/user/download/" + avatar).into(imageView);
         }
         btn_register.setOnClickListener(v -> {
 //            if (type == 1) {
@@ -211,19 +209,19 @@ public class UserCenterActivity extends BaseActivity {
     }
 
     private void login(String userName, String verify) {
-        RetrofitUtils.getRetrofitService().login(userName, verify, "password", "mydog", "all", "myDog")
+        RetrofitUtils.getRetrofitService().login(new LoginRequest(userName, 2, verify))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<LoginResponse>() {
+                .subscribe(new Observer<RemoteResult<LoginResponse>>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                     }
 
                     @Override
-                    public void onNext(@NonNull LoginResponse result) {
+                    public void onNext(@NonNull RemoteResult<LoginResponse> result) {
                         ConfigPreferences.setLoginName(UserCenterActivity.this, userName);
-                        ConfigPreferences.setLoginToken(UserCenterActivity.this, result.access_token);
-                        ConfigPreferences.setRefreshToken(UserCenterActivity.this, result.refresh_token);
+                        ConfigPreferences.setLoginToken(UserCenterActivity.this, result.data.accessToken);
+                        ConfigPreferences.setRefreshToken(UserCenterActivity.this, result.data.refreshToken);
                         startActivity(new Intent(UserCenterActivity.this, MainActivity.class));
                         ToastUtils.customToast(UserCenterActivity.this, "登录成功");
                         finish();
@@ -359,14 +357,14 @@ public class UserCenterActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
                             ConfigPreferences.setLoginName(UserCenterActivity.this, "");
                             ConfigPreferences.setLoginToken(UserCenterActivity.this, "");
                             startActivity(new Intent(UserCenterActivity.this, LoginActivity.class));
                             finish();
                         } else {
-                            ToastUtils.customToast(UserCenterActivity.this, message);
+                            ToastUtils.customToast(UserCenterActivity.this, responeThrowable.message);
                         }
                     }
 

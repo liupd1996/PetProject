@@ -17,7 +17,14 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.petproject.adapter.MyFragmentPagerAdapter2;
 import com.example.petproject.base.BaseActivity;
+import com.example.petproject.bean.RefreshRequest;
+import com.example.petproject.bean.RefreshResponse;
+import com.example.petproject.bean.RegisterRequest;
+import com.example.petproject.bean.RemoteResult;
+import com.example.petproject.retrofit.ResultFunction;
+import com.example.petproject.retrofit.RetrofitUtils;
 import com.example.petproject.utils.ConfigPreferences;
+import com.example.petproject.utils.ExceptionHandle;
 import com.example.petproject.utils.ToastUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.pgyer.pgyersdk.PgyerSDKManager;
@@ -28,6 +35,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import constant.UiType;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import listener.Md5CheckResultListener;
 import listener.UpdateDownloadListener;
 import model.UiConfig;
@@ -42,9 +53,11 @@ public class MainActivity extends BaseActivity {
         if (TextUtils.isEmpty(ConfigPreferences.login_token(this))) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
+        } else {
+            refreshToken();
         }
         checkPermission();
-        initView();
+        //initView();
         UpdateAppUtils.init(this);
         PgyerSDKManager.checkVersionUpdate(new CheckoutCallBack() {
             @Override
@@ -205,6 +218,55 @@ public class MainActivity extends BaseActivity {
             }
         }
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    private void refreshToken() {
+        String refresh_token = ConfigPreferences.refresh_token(this);
+        if (TextUtils.isEmpty(refresh_token)) {
+            return;
+        }
+        RetrofitUtils.getRetrofitService().refreshToken(refresh_token)
+                .filter(new ResultFunction())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RemoteResult<RefreshResponse>>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(@io.reactivex.annotations.NonNull RemoteResult<RefreshResponse> result) {
+                        Log.d("111111111111111", "refreshToken***********************************: ");
+                        ConfigPreferences.setLoginToken(MainActivity.this,result.data.accessToken);
+                        ConfigPreferences.setRefreshToken(MainActivity.this,result.data.refreshToken);
+                        //Log.d("11111111111", "onNext refreshToken: " + result.data.refreshToken);
+                        //Log.d("11111111111", "onNext accessToken: " + result.data.accessToken);
+                        initView();
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        Log.d("11111111111", "onError refreshToken: ");
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
+                            ConfigPreferences.setLoginName(MainActivity.this, "");
+                            ConfigPreferences.setLoginToken(MainActivity.this, "");
+                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            ToastUtils.customToast(MainActivity.this, responeThrowable.message);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
     }
 
     @Override

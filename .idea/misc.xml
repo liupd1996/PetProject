@@ -9,6 +9,7 @@
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bar_selected.xml" value="0.2345" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bar_selected_right.xml" value="0.2345" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bar_selector.xml" value="0.2345" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bar_selector_color.xml" value="0.261" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bar_selector_colort.xml" value="0.2345" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bar_selector_right.xml" value="0.2345" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/drawable/bg_grape_corner_20dp.xml" value="0.1905" />
@@ -58,6 +59,8 @@
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/avator_select.xml" value="0.2563405797101449" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/bottom_sheet_pet_type.xml" value="0.2563405797101449" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/device_item.xml" value="0.2463768115942029" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/dialog_pet_hosp.xml" value="0.2760416666666667" />
+        <entry key="..\:/aswork/PetProject/app/src/main/res/layout/dialog_remind.xml" value="0.264" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/dialog_sure_cancel.xml" value="0.22760416666666666" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab1.xml" value="0.20199275362318841" />
         <entry key="..\:/aswork/PetProject/app/src/main/res/layout/fragment_tab2.xml" value="0.20199275362318841" />

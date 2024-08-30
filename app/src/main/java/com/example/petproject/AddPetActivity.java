@@ -88,7 +88,7 @@ public class AddPetActivity extends BaseActivity {
                 indexGender = petRequest.gender;
                 indexCut = petRequest.isSpayed;
                 indexVaccine = petRequest.isVaccinated;
-                if (TextUtils.isEmpty(petRequest.birth)) {
+                if (petRequest.birth!= null && TextUtils.isEmpty(petRequest.birth)) {
                     String[] parts = petRequest.birth.split("T");
                     if (parts.length > 0) {
                         selectedDate = parts[0];
@@ -233,14 +233,14 @@ public class AddPetActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
                             ConfigPreferences.setLoginName(AddPetActivity.this, "");
                             ConfigPreferences.setLoginToken(AddPetActivity.this, "");
                             startActivity(new Intent(AddPetActivity.this, LoginActivity.class));
                             finish();
                         } else {
-                            ToastUtils.customToast(AddPetActivity.this, message);
+                            ToastUtils.customToast(AddPetActivity.this, responeThrowable.message);
                         }
 
                     }
@@ -269,14 +269,14 @@ public class AddPetActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
                             ConfigPreferences.setLoginName(AddPetActivity.this, "");
                             ConfigPreferences.setLoginToken(AddPetActivity.this, "");
                             startActivity(new Intent(AddPetActivity.this, LoginActivity.class));
                             finish();
                         } else {
-                            ToastUtils.customToast(AddPetActivity.this, message);
+                            ToastUtils.customToast(AddPetActivity.this, responeThrowable.message);
                         }
 
                     }
@@ -316,14 +316,14 @@ public class AddPetActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
                             ConfigPreferences.setLoginName(AddPetActivity.this, "");
                             ConfigPreferences.setLoginToken(AddPetActivity.this, "");
                             startActivity(new Intent(AddPetActivity.this, LoginActivity.class));
                             finish();
                         } else {
-                            ToastUtils.customToast(AddPetActivity.this, message);
+                            ToastUtils.customToast(AddPetActivity.this, responeThrowable.message);
                         }
                     }
 
@@ -353,14 +353,14 @@ public class AddPetActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
                             ConfigPreferences.setLoginName(AddPetActivity.this, "");
                             ConfigPreferences.setLoginToken(AddPetActivity.this, "");
                             startActivity(new Intent(AddPetActivity.this, LoginActivity.class));
                             finish();
                         } else {
-                            ToastUtils.customToast(AddPetActivity.this, message);
+                            ToastUtils.customToast(AddPetActivity.this, responeThrowable.message);
                         }
                     }
 

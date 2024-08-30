@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.petproject.adapter.PetAdapter;
 import com.example.petproject.base.BaseActivity;
-import com.example.petproject.bean.PetRequest;
 import com.example.petproject.bean.PetResponse;
 import com.example.petproject.bean.RemoteResult;
 import com.example.petproject.retrofit.ResultFunction;
@@ -117,14 +116,14 @@ public class PetActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
                             ConfigPreferences.setLoginName(PetActivity.this, "");
                             ConfigPreferences.setLoginToken(PetActivity.this, "");
                             startActivity(new Intent(PetActivity.this, LoginActivity.class));
                             finish();
                         } else {
-                            ToastUtils.customToast(PetActivity.this, message);
+                            ToastUtils.customToast(PetActivity.this, responeThrowable.message);
                         }
                     }
 

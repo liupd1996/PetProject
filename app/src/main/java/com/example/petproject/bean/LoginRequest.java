@@ -2,14 +2,14 @@ package com.example.petproject.bean;
 
 public class LoginRequest {
     String phone;
-    String smsCode;
-    String grant_type = "password";
-    String client_id = "mydog";
-    String scope = "all";
-    String client_secret = "myDog";
+    int type;
+    String code;
+    String password;
 
-    public LoginRequest(String phone, String smsCode) {
+
+    public LoginRequest(String phone, int type, String code) {
         this.phone = phone;
-        this.smsCode = smsCode;
+        this.type = type;
+        this.code = code;
     }
 }

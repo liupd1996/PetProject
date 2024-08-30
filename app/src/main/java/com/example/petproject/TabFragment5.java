@@ -119,13 +119,13 @@ public class TabFragment5 extends Fragment {
                         }
                         tv_name.setText(result.data.username);
                         tv_id.setText("ID：" + result.data.id);
-                        Glide.with(getContext()).load("http://47.94.99.63:8087/user/download/" + result.data.avatar).into(iv_head);
+                        Glide.with(getContext()).load("http://47.94.99.63:8088/user/download/" + result.data.avatar).into(iv_head);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
                             ConfigPreferences.setLoginName(getContext(), "");
                             ConfigPreferences.setLoginToken(getContext(), "");
                             startActivity(new Intent(getContext(), LoginActivity.class));
@@ -133,7 +133,7 @@ public class TabFragment5 extends Fragment {
                                 getActivity().finish();
                             }
                         } else {
-                            ToastUtils.customToast(getContext(), message);
+                            ToastUtils.customToast(getContext(), responeThrowable.message);
                         }
                     }
 

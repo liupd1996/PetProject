@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.petproject.adapter.HistoryItem;
 import com.example.petproject.bean.JsonRequest;
 import com.example.petproject.bean.JsonRequest.Data;
 import com.example.petproject.bean.PetResponse;
@@ -229,15 +228,14 @@ public class TabFragment1 extends Fragment {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        Log.d("7777", "onError: ");
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
                             ConfigPreferences.setLoginName(getContext(), "");
                             ConfigPreferences.setLoginToken(getContext(), "");
                             startActivity(new Intent(getContext(), LoginActivity.class));
                             getActivity().finish();
                         } else {
-                            ToastUtils.customToast(getContext(), message);
+                            ToastUtils.customToast(getContext(), responeThrowable.message);
                         }
 
                     }
@@ -427,8 +425,8 @@ public class TabFragment1 extends Fragment {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
                             ToastUtils.customToast(getContext(), "登录过期");
                             ConfigPreferences.setLoginName(getContext(), "");
                             ConfigPreferences.setLoginToken(getContext(), "");
@@ -437,7 +435,7 @@ public class TabFragment1 extends Fragment {
                                 getActivity().finish();
                             }
                         } else {
-                            ToastUtils.customToast(getContext(), message);
+                            ToastUtils.customToast(getContext(), responeThrowable.message);
                         }
                     }
 
@@ -445,6 +443,19 @@ public class TabFragment1 extends Fragment {
                     public void onComplete() {
                     }
                 });
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {
+            if (mPetDialog.getDialog() != null && mPetDialog.getDialog().isShowing()) {
+                mPetDialog.dismiss();
+            }
+            if (mDeviceDialog.getDialog() != null && mDeviceDialog.getDialog().isShowing()) {
+                mDeviceDialog.dismiss();
+            }
+        }
     }
 
     private void updateView(List<PetResponse> list) {
@@ -455,6 +466,7 @@ public class TabFragment1 extends Fragment {
         List<PetResponse> filterList = filterList(list);
         if (filterList.size() == 0) {
             mDeviceDialog.show(getActivity().getSupportFragmentManager(), "addDevice");
+            return;
         }
         PetResponse petResponse;
         Log.d(TAG, "updateView: " + filterList.size());

@@ -39,6 +39,7 @@ public class DeviceActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ImageButton button = findViewById(R.id.iv_back);
         button.setOnClickListener(v -> {
+            //super.onBackPressed();
             Intent intent = new Intent(DeviceActivity.this, MainActivity.class);
             startActivity(intent);
         });
@@ -98,14 +99,14 @@ public class DeviceActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
                             ConfigPreferences.setLoginName(DeviceActivity.this, "");
                             ConfigPreferences.setLoginToken(DeviceActivity.this, "");
                             startActivity(new Intent(DeviceActivity.this, LoginActivity.class));
                             finish();
                         } else {
-                            ToastUtils.customToast(DeviceActivity.this, message);
+                            ToastUtils.customToast(DeviceActivity.this, responeThrowable.message);
                         }
                     }
 

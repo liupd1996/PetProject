@@ -7,10 +7,13 @@ import com.example.petproject.bean.DevicePetRequest;
 import com.example.petproject.bean.DeviceRequest;
 import com.example.petproject.bean.DeviceResponse;
 import com.example.petproject.bean.InstallResponse;
+import com.example.petproject.bean.LoginRequest;
 import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.PetRequest;
 import com.example.petproject.bean.PetResponse;
 import com.example.petproject.bean.PetWeightRequest;
+import com.example.petproject.bean.RefreshRequest;
+import com.example.petproject.bean.RefreshResponse;
 import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
 import com.example.petproject.bean.UserEditRequest;
@@ -46,18 +49,23 @@ public interface RetrofitService {
 //    @POST("/oauth/token")
 //    Observable<RemoteResult<LoginResponse>> login(@Body LoginRequest request);
 
-    @FormUrlEncoded
-    @POST("/oauth/token")
-    Observable<LoginResponse> login(@Field("phone") String username,
-                                    @Field("smsCode") String password,
-                                    @Field("grant_type") String grantType,
-                                    @Field("client_id") String client_id,
-                                    @Field("scope") String scope,
-                                    @Field("client_secret") String client_secret);
+//    @FormUrlEncoded
+//    @POST("/oauth/token")
+//    Observable<LoginResponse> login(@Field("phone") String username,
+//                                    @Field("smsCode") String password,
+//                                    @Field("grant_type") String grantType,
+//                                    @Field("client_id") String client_id,
+//                                    @Field("scope") String scope,
+//                                    @Field("client_secret") String client_secret);
 
+    @POST("/user/login")
+    Observable<RemoteResult<LoginResponse>> login(@Body LoginRequest loginRequest);
 
     @POST("/user/register")
     Observable<RemoteResult<Object>> register(@Body RegisterRequest request);
+
+    @POST("/user/refreshToken/{token}")
+    Observable<RemoteResult<RefreshResponse>> refreshToken(@Path("token") String token);
 
     @PUT("/user/edit")
     Observable<RemoteResult<Object>> userEdit(@Header("Authorization") String authorization, @Body UserEditRequest request);

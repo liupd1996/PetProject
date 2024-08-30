@@ -20,7 +20,7 @@ public class RetrofitUtils {
 
     public static RetrofitService getRetrofitService() {
         return new Retrofit.Builder()
-                .baseUrl("http://47.94.99.63:8087/")//http://192.168.1.34:8097
+                .baseUrl("http://47.94.99.63:8088")//http://192.168.1.34:8097 http://prod-cn.your-api-server.com
                 .client(getOkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 支持RxJava

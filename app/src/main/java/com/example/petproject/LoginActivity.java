@@ -1,12 +1,8 @@
 package com.example.petproject;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -14,16 +10,15 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.TextAppearanceSpan;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.petproject.base.BaseActivity;
+import com.example.petproject.bean.LoginRequest;
 import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.RemoteResult;
 import com.example.petproject.retrofit.ResultFunction;
@@ -94,6 +89,12 @@ public class LoginActivity extends BaseActivity {
             if (TextUtils.isEmpty(verify)) {
                 //ToastUtils.continuousToast(this, "请获取验证码");
                 tv_notify.setText("请获取验证码");
+                return;
+            }
+
+            if (verify.length() != 6) {
+                //ToastUtils.continuousToast(this, "请获取验证码");
+                tv_notify.setText("请输入6位验证码");
                 return;
             }
 
@@ -203,19 +204,24 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login(String userName, String verify) {
-        RetrofitUtils.getRetrofitService().login(userName, verify,"password","mydog","all","myDog")
+        RetrofitUtils.getRetrofitService().login(new LoginRequest(userName, 2, verify))
+                .filter(new ResultFunction())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<LoginResponse>() {
+                .subscribe(new Observer<RemoteResult<LoginResponse>>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                     }
 
                     @Override
-                    public void onNext(@NonNull LoginResponse result) {
+                    public void onNext(@NonNull RemoteResult<LoginResponse> result) {
+                        if (result == null || result.data == null) {
+                            return;
+                        }
+                        Log.d(TAG, "onNext: " + result.data.toString());
                         ConfigPreferences.setLoginName(LoginActivity.this, userName);
-                        ConfigPreferences.setLoginToken(LoginActivity.this, result.access_token);
-                        ConfigPreferences.setRefreshToken(LoginActivity.this, result.refresh_token);
+                        ConfigPreferences.setLoginToken(LoginActivity.this, result.data.accessToken);
+                        ConfigPreferences.setRefreshToken(LoginActivity.this, result.data.refreshToken);
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         mTimeCount.onFinish();
                         finish();
@@ -223,20 +229,18 @@ public class LoginActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        String message = ExceptionHandle.handleException(e).message;
-                        Log.d(TAG, "message**********************************: " + message);
-                        if (message.equals("SS0002")) {//SS0002为手机号未注册的情况、SS0001为验证码问题
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        Log.d(TAG, "message**********************************: " + responeThrowable.message);
+                        if (responeThrowable.code.equals("020003")) {//020003为手机号未注册的情况、020005为验证码问题
                             Intent intent = new Intent(LoginActivity.this, UserCenterActivity.class);
                             intent.putExtra("phone", userName);
                             intent.putExtra("smsCode", verify);
                             startActivity(intent);
-                        } else if (message.equals("SS0001")) {
+                        } else if (responeThrowable.code.equals("020005")) {
                             Log.d(TAG, "handleException 验证码问题: ");
-                            //ToastUtils.customToast(LoginActivity.this, "输入的验证码有误");
-                            tv_notify.setText("输入的验证码有误");
+                            tv_notify.setText("验证码错误或验证码已失效");
                         } else {
-                            //ToastUtils.customToast(LoginActivity.this, message);
-                            tv_notify.setText(message);
+                            tv_notify.setText("系统错误");
                         }
                     }
 

@@ -296,7 +296,6 @@ public class TabFragment3 extends Fragment implements LocationSource,
     private Runnable mRunnable2 = new Runnable() {
         @Override
         public void run() {
-            //startWebSocket();
             String token = "Bearer " + ConfigPreferences.login_token(getContext());
             search(token);
         }
@@ -403,12 +402,23 @@ public class TabFragment3 extends Fragment implements LocationSource,
         if (!hidden) {
             startWebSocket();
             judgeCircle();
+        } else {
+            if (mPetDialog.getDialog() != null && mPetDialog.getDialog().isShowing()) {
+                mPetDialog.dismiss();
+            }
+            if (mDeviceDialog.getDialog() != null && mDeviceDialog.getDialog().isShowing()) {
+                mDeviceDialog.dismiss();
+            }
+            mHandler.removeCallbacks(mRunnable);
+            mHandler.removeCallbacks(mRunnable2);
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        mHandler.removeCallbacks(mRunnable);
+        mHandler.removeCallbacks(mRunnable2);
         mapView.onPause();
     }
 
@@ -674,8 +684,9 @@ public class TabFragment3 extends Fragment implements LocationSource,
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        Log.d("222222", "******************************onError responeThrowable.code: " + responeThrowable.code);
+                        if (responeThrowable.code.equals("020000")) {
                             ToastUtils.customToast(getContext(), "登录过期");
                             ConfigPreferences.setLoginName(getContext(), "");
                             ConfigPreferences.setLoginToken(getContext(), "");
@@ -684,7 +695,7 @@ public class TabFragment3 extends Fragment implements LocationSource,
                                 getActivity().finish();
                             }
                         } else {
-                            ToastUtils.customToast(getContext(), message);
+                            ToastUtils.customToast(getContext(), responeThrowable.message);
                         }
                     }
 

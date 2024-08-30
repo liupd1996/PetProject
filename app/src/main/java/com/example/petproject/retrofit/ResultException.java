@@ -1,10 +1,10 @@
 package com.example.petproject.retrofit;
 
 public class ResultException extends Exception{
-    public int code;
+    public String code;
     public String error;
 
-    public ResultException(int code, String error) {
+    public ResultException(String code, String error) {
         this.code = code;
         this.error = error;
     }

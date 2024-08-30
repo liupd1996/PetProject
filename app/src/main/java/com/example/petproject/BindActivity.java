@@ -74,14 +74,14 @@ public class BindActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
                             ConfigPreferences.setLoginName(BindActivity.this, "");
                             ConfigPreferences.setLoginToken(BindActivity.this, "");
                             startActivity(new Intent(BindActivity.this, LoginActivity.class));
                             finish();
                         } else {
-                            ToastUtils.customToast(BindActivity.this, message);
+                            ToastUtils.customToast(BindActivity.this, responeThrowable.message);
                         }
                     }
 

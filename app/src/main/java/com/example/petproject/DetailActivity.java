@@ -2,7 +2,6 @@ package com.example.petproject;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -11,10 +10,8 @@ import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -270,15 +267,14 @@ public class DetailActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        Log.d("7777", "onError: ");
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
                             ConfigPreferences.setLoginName(DetailActivity.this, "");
                             ConfigPreferences.setLoginToken(DetailActivity.this, "");
                             startActivity(new Intent(DetailActivity.this, LoginActivity.class));
                             finish();
                         } else {
-                            ToastUtils.customToast(DetailActivity.this, message);
+                            ToastUtils.customToast(DetailActivity.this, responeThrowable.message);
                         }
 
                     }
@@ -311,15 +307,14 @@ public class DetailActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        Log.d("7777", "onError: ");
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
                             ConfigPreferences.setLoginName(DetailActivity.this, "");
                             ConfigPreferences.setLoginToken(DetailActivity.this, "");
                             startActivity(new Intent(DetailActivity.this, LoginActivity.class));
                             finish();
                         } else {
-                            ToastUtils.customToast(DetailActivity.this, message);
+                            ToastUtils.customToast(DetailActivity.this, responeThrowable.message);
                         }
 
                     }
@@ -349,14 +344,14 @@ public class DetailActivity extends BaseActivity {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        String message = ExceptionHandle.handleException(e).message;
-                        if (message.equals("invalid_token")) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
                             ConfigPreferences.setLoginName(DetailActivity.this, "");
                             ConfigPreferences.setLoginToken(DetailActivity.this, "");
                             startActivity(new Intent(DetailActivity.this, LoginActivity.class));
                             finish();
                         } else {
-                            ToastUtils.customToast(DetailActivity.this, message);
+                            ToastUtils.customToast(DetailActivity.this, responeThrowable.message);
                         }
 
                     }

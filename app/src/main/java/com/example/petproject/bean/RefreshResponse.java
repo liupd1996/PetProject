@@ -1,6 +1,6 @@
 package com.example.petproject.bean;
 
-public class LoginResponse {
+public class RefreshResponse {
     public String accessToken;
     public String refreshToken;
 
