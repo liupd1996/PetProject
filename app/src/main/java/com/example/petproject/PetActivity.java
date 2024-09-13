@@ -50,7 +50,7 @@ public class PetActivity extends BaseActivity {
         findViewById(R.id.btn_add).setOnClickListener(view -> {
             if (list != null && list.size() < 4) {
                 Intent intent = new Intent(PetActivity.this, AddPetActivity.class);
-                intent.putExtra("type",1);
+                intent.putExtra("type", 1);
                 startActivityForResult(intent, REQUEST_CODE);
             } else {
                 ToastUtils.customToast(PetActivity.this, "最多只支持四只宠物");
@@ -105,7 +105,10 @@ public class PetActivity extends BaseActivity {
 
                     @Override
                     public void onNext(@NonNull RemoteResult<List<PetResponse>> result) {
-                        Log.d("11111111", "onNext: " + type);
+                        //Log.d("11111111", "onNext: " + type);
+                        if (result.data != null && result.data.size() > 0) {
+                            ConfigPreferences.setPetAvatar(PetActivity.this, result.data.get(0).avatar);
+                        }
                         if (type == 1) {
                             list = filterList(result.data);
                         } else {

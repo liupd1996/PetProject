@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.petproject.bean.JsonRequest;
 import com.example.petproject.bean.JsonRequest.Data;
 import com.example.petproject.bean.PetResponse;
@@ -485,13 +486,26 @@ public class TabFragment1 extends Fragment {
         weight = petResponse.weight + " 千克";
         weight_num = petResponse.weight;
         tv_weight.setText(getTextSizeSpan(weight, 0, petResponse.weight.length() + 1));
-        if (petResponse.type == 0) {
-            tv_birth.setText("猫猫");
-            avatar.setImageResource(R.drawable.cat_default);
+
+        if (!TextUtils.isEmpty(petResponse.avatar)) {
+            Glide.with(getContext()).load("http://47.94.99.63:8088/pet/download/" + petResponse.avatar).into(avatar);
         } else {
-            tv_birth.setText("狗狗");
-            avatar.setImageResource(R.drawable.dog_default);
+            if (petResponse.type == 0) {
+                avatar.setImageResource(R.drawable.dog_default);
+
+            } else {
+                avatar.setImageResource(R.drawable.cat_default);
+            }
         }
+        tv_birth.setText(petResponse.breed);
+
+//        if (petResponse.type == 0) {
+//            tv_birth.setText("狗狗");
+//            avatar.setImageResource(R.drawable.dog_default);
+//        } else {
+//            tv_birth.setText("猫猫");
+//            avatar.setImageResource(R.drawable.cat_default);
+//        }
         if (petResponse.gender == 0) {
             iv_gender.setBackgroundResource(R.drawable.man);
         } else {

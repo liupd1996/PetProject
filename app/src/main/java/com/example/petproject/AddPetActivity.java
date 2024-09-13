@@ -2,9 +2,12 @@ package com.example.petproject;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,7 +21,13 @@ import android.widget.TextView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.example.petproject.base.BaseActivity;
+import com.example.petproject.bean.AvatarResponse;
+import com.example.petproject.bean.Breed;
+import com.example.petproject.bean.BreedRecord;
 import com.example.petproject.bean.PetRequest;
 import com.example.petproject.bean.PetResponse;
 import com.example.petproject.bean.RemoteResult;
@@ -33,8 +42,13 @@ import com.example.petproject.utils.ExceptionHandle;
 import com.example.petproject.utils.ToastUtils;
 import com.example.petproject.utils.Utils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -42,25 +56,34 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class AddPetActivity extends BaseActivity {
     private static final String TAG = "AddPetActivity";
     private PetTypeBottomSheetFragment fragmentType;
     private PetTypeBottomSheetFragment fragmentGender;
+    private PetTypeBottomSheetFragment fragmentBreed;
     private PetTypeBottomSheetFragment fragmentCut;
     private PetTypeBottomSheetFragment fragmentVaccine;
+    private CircularImageView imageView;
+    String avatar = "";
     private String name = "";
     private String weight = "";
     private int indexType = 0;
     private int indexGender = 0;
     private int indexCut = 0;
     private int indexVaccine = 0;
+    private int indexBreed = 0;
+    private List<Breed> listBreed = new ArrayList<>();
     private String selectedDate = "";
-    private String base64Avator = "";
     private String id;
-    private int breed;
+    private String breed;
+    private String breedId;
     private SureCancelDialog mDialog;
     private PetResponse petRequest;
+    String[] breedArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,20 +111,11 @@ public class AddPetActivity extends BaseActivity {
                 indexGender = petRequest.gender;
                 indexCut = petRequest.isSpayed;
                 indexVaccine = petRequest.isVaccinated;
-                if (petRequest.birth!= null && TextUtils.isEmpty(petRequest.birth)) {
-                    String[] parts = petRequest.birth.split("T");
-                    if (parts.length > 0) {
-                        selectedDate = parts[0];
-                    } else {
-                        selectedDate = "";
-                    }
-                } else {
-                    selectedDate = "";
-                }
-                //selectedDate = petRequest.birth;
-                base64Avator = petRequest.avatar;
+                selectedDate = petRequest.birth;
+                avatar = petRequest.avatar;
                 id = petRequest.id;
                 breed = petRequest.breed;
+                breedId = petRequest.breedId;
                 // 在这里使用 petRequest 对象
                 findViewById(R.id.iv_delete).setVisibility(View.VISIBLE);
                 findViewById(R.id.iv_delete).setOnClickListener(view -> {
@@ -109,6 +123,18 @@ public class AddPetActivity extends BaseActivity {
                 });
             }
         }
+        imageView = findViewById(R.id.pet_avator);
+        Log.d(TAG, "pet_avator: " + avatar);
+        String avatarUrl = "http://47.94.99.63:8088/pet/download/" + avatar;
+        String token = "Bearer " + ConfigPreferences.login_token(AddPetActivity.this);
+
+        GlideUrl glideUrl = new GlideUrl(avatarUrl, new LazyHeaders.Builder()
+                .addHeader("Authorization", token)  // 如果你使用 Bearer Token
+                .build());
+
+        Glide.with(AddPetActivity.this).load(glideUrl).into(imageView);
+
+
         initDialogFragment();
 //        findViewById(R.id.cl_bar_back).setBackgroundColor(Color.parseColor("#FFC0CB"));
         findViewById(R.id.cl_birth).setOnClickListener(view -> {
@@ -116,6 +142,13 @@ public class AddPetActivity extends BaseActivity {
         });
         findViewById(R.id.cl_type).setOnClickListener(view -> {
             fragmentType.show(getSupportFragmentManager(), fragmentType.getTag());
+            //String token = "Bearer " + ConfigPreferences.login_token(AddPetActivity.this);
+            //breedSearch(token);
+        });
+        findViewById(R.id.cl_breed).setOnClickListener(view -> {
+            fragmentBreed.setDefaultSelectedIndex(findBreedIndex(breed, breedArray));
+            fragmentBreed.show(getSupportFragmentManager(), fragmentBreed.getTag());
+
         });
         findViewById(R.id.cl_gender).setOnClickListener(view -> {
             fragmentGender.show(getSupportFragmentManager(), fragmentGender.getTag());
@@ -126,11 +159,13 @@ public class AddPetActivity extends BaseActivity {
         findViewById(R.id.cl_vaccine).setOnClickListener(view -> {
             fragmentVaccine.show(getSupportFragmentManager(), fragmentVaccine.getTag());
         });
+        TextView tv_breed = findViewById(R.id.tv_breed);
+        tv_breed.setText(breed);
         TextView tv_type = findViewById(R.id.tv_type);
         if (indexType == 0) {
-            tv_type.setText("猫猫");
-        } else {
             tv_type.setText("狗狗");
+        } else {
+            tv_type.setText("猫猫");
         }
         TextView tv_gender = findViewById(R.id.tv_gender);
         if (indexGender == 0) {
@@ -171,25 +206,36 @@ public class AddPetActivity extends BaseActivity {
         findViewById(R.id.btn_save).setOnClickListener(view -> {
             String name = et_name.getText().toString();
             if (TextUtils.isEmpty(name)) {
-                ToastUtils.customToast(AddPetActivity.this,"请输入宠物名字");
+                ToastUtils.customToast(AddPetActivity.this, "请输入宠物名字");
                 return;
             }
             String weight = et_weight.getText().toString();
             if (TextUtils.isEmpty(weight)) {
-                ToastUtils.customToast(AddPetActivity.this,"请输入宠物体重");
+                ToastUtils.customToast(AddPetActivity.this, "请输入宠物体重");
                 return;
             }
-            String token = "Bearer " + ConfigPreferences.login_token(AddPetActivity.this);
-            PetRequest request = new PetRequest(base64Avator, selectedDate
-                    ,breed, indexGender, id, indexCut, indexVaccine, name, indexType, weight);
+            breed = listBreed.get(indexBreed).breed;
+            breedId = listBreed.get(indexBreed).id;
+            PetRequest request = new PetRequest(avatar, selectedDate
+                    , breed, breedId, indexGender, id, indexCut, indexVaccine, name, indexType, indexType + "", weight);
             if (petRequest == null) {
                 petInsert(token, request);
             } else {
                 petUpdate(token, request);
             }
         });
-        String token = "Bearer " + ConfigPreferences.login_token(AddPetActivity.this);
-        breedSearch(token);
+    }
+
+    public int findBreedIndex(String breed, String[] breedArray) {
+        if (breed == null || breedArray == null) {
+            return 0;
+        }
+        for (int i = 0; i < breedArray.length; i++) {
+            if (breedArray[i].equals(breed)) {
+                return i;  // 找到匹配项，返回索引
+            }
+        }
+        return 0;  // 如果没有找到匹配项，返回 0
     }
 
     public String[] permissions = new String[]{Manifest.permission.CAMERA};
@@ -205,7 +251,8 @@ public class AddPetActivity extends BaseActivity {
     }
 
     private void petInsert(String token, PetRequest request) {//todo pet update
-        RetrofitUtils.getRetrofitService().petInsert(token,request)
+        Log.d(TAG, "petInsert:" + request.toString());
+        RetrofitUtils.getRetrofitService().petInsert(token, request)
                 .filter(new ResultFunction())
                 .subscribeOn(Schedulers.io())//todo add edit
                 .observeOn(AndroidSchedulers.mainThread())
@@ -251,20 +298,30 @@ public class AddPetActivity extends BaseActivity {
                 });
     }
 
-
     private void breedSearch(String token) {//todo pet update
-        RetrofitUtils.getRetrofitService().breedSearch(token,0)
+        RetrofitUtils.getRetrofitService().breedSearch(token, indexType)
                 .filter(new ResultFunction())
                 .subscribeOn(Schedulers.io())//todo add edit
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<RemoteResult<Object>>() {
+                .subscribe(new Observer<RemoteResult<BreedRecord>>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                     }
 
                     @Override
-                    public void onNext(@NonNull RemoteResult<Object> result) {
+                    public void onNext(@NonNull RemoteResult<BreedRecord> result) {
+                        if (result.data.records == null) {
+                            return;
+                        }
+                        listBreed = result.data.records;
+                        int size = result.data.records.size();
+                        breedArray = new String[size];
 
+                        for (int i = 0; i < size; i++) {
+                            breedArray[i] = result.data.records.get(i).breed;  // 获取 breed 字段
+                        }
+                        fragmentBreed.setOptions(breedArray);
+                        Log.d(TAG, "breedArray: " + Arrays.toString(breedArray));
                     }
 
                     @Override
@@ -288,7 +345,7 @@ public class AddPetActivity extends BaseActivity {
     }
 
     private void petUpdate(String token, PetRequest request) {//todo pet update
-        RetrofitUtils.getRetrofitService().petUpdate(token,request)
+        RetrofitUtils.getRetrofitService().petUpdate(token, request)
                 .filter(new ResultFunction())
                 .subscribeOn(Schedulers.io())//todo add edit
                 .observeOn(AndroidSchedulers.mainThread())
@@ -376,16 +433,30 @@ public class AddPetActivity extends BaseActivity {
     }
 
     private void initDialogFragment() {
+        String token = "Bearer " + ConfigPreferences.login_token(AddPetActivity.this);
+        breedSearch(token);
         fragmentType = new PetTypeBottomSheetFragment();
-        String[] petTypes = {"猫猫", "狗狗"};
+        fragmentType.setDefaultSelectedIndex(indexType);
+        String[] petTypes = {"狗狗", "猫猫"};
         fragmentType.setOptions(petTypes);
         fragmentType.setOnItemSelectedListener((selectedItem, index) -> {
             indexType = index;
             TextView tv_type = findViewById(R.id.tv_type);
             tv_type.setText(selectedItem);
+            breedSearch(token);
         });
 
+        fragmentBreed = new PetTypeBottomSheetFragment();
+        fragmentBreed.setDefaultSelectedIndex(findBreedIndex(breed, breedArray));
+        fragmentBreed.setOnItemSelectedListener((selectedItem, index) -> {
+            indexBreed = index;
+            TextView tv_breed = findViewById(R.id.tv_breed);
+            tv_breed.setText(selectedItem);
+        });
+
+
         fragmentGender = new PetTypeBottomSheetFragment();
+        fragmentGender.setDefaultSelectedIndex(indexGender);
         String[] genders = {"男生", "女生"};
         fragmentGender.setOptions(genders);
         fragmentGender.setOnItemSelectedListener((selectedItem, index) -> {
@@ -395,6 +466,7 @@ public class AddPetActivity extends BaseActivity {
         });
 
         fragmentCut = new PetTypeBottomSheetFragment();
+        fragmentCut.setDefaultSelectedIndex(indexCut);
         String[] cuts = {"是", "否"};
         fragmentCut.setOptions(cuts);
         fragmentCut.setOnItemSelectedListener((selectedItem, index) -> {
@@ -404,6 +476,7 @@ public class AddPetActivity extends BaseActivity {
         });
 
         fragmentVaccine = new PetTypeBottomSheetFragment();
+        fragmentVaccine.setDefaultSelectedIndex(indexVaccine);
         String[] vaccine = {"是", "否"};
         fragmentVaccine.setOptions(vaccine);
         fragmentVaccine.setOnItemSelectedListener((selectedItem, index) -> {
@@ -435,14 +508,21 @@ public class AddPetActivity extends BaseActivity {
                 month,
                 day
         );
+        if (!TextUtils.isEmpty(selectedDate)) {
+            String[] parts = selectedDate.split("-");
 
+            int year1 = Integer.parseInt(parts[0]);  // 年：2024
+            int month1 = Integer.parseInt(parts[1]) - 1;  // 月：09 （减1，因为月份从0开始）
+            int day1 = Integer.parseInt(parts[2]);  // 日：14
+            datePickerDialog.updateDate(year1, month1, day1);
+        }
         // 显示日期选择对话框
         datePickerDialog.show();
     }
 
+
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_IMAGE_PICK = 2;
-    private CircularImageView imageView;
 
     private void showBottomSheet() {
         AvatorFragment fragment = new AvatorFragment();
@@ -459,10 +539,11 @@ public class AddPetActivity extends BaseActivity {
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Log.d(TAG, "dispatchTakePictureIntent: " + takePictureIntent);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         } else {
-            ToastUtils.customToast(AddPetActivity.this,"未找到相机应用");
+            ToastUtils.customToast(AddPetActivity.this, "未找到相机应用");
         }
     }
 
@@ -473,29 +554,131 @@ public class AddPetActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_IMAGE_CAPTURE) {
-                Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                Bitmap compressedBitmap = Bitmap.createScaledBitmap(imageBitmap, 64, 64, true);
-                base64Avator = Utils.bitmapToBase64(compressedBitmap);
-                imageView.setImageBitmap(imageBitmap);
-            } else if (requestCode == REQUEST_IMAGE_PICK) {
-                Uri selectedImageUri = data.getData();
-                Bitmap imageBitmap = null;
-                try {
-                    imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                // 将图像转换为Base64字符串
-                Bitmap compressedBitmap = Bitmap.createScaledBitmap(imageBitmap, 64, 64, true);
-                base64Avator = Utils.bitmapToBase64(compressedBitmap);
-                imageView.setImageURI(selectedImageUri);
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri selectedImage = data.getData();
+            Bitmap selectedBitmap = getBitmapFromUri(selectedImage);
+            if (selectedBitmap == null) {
+                ToastUtils.customToast(AddPetActivity.this, "图片选择失败");
+                return;
             }
+            Bitmap compressBitmap = compressBitmap(selectedBitmap);
+            imageView.setImageBitmap(compressBitmap);
+            uploadPetImage(getImageUri(getApplicationContext(), compressBitmap));
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            Bitmap compressBitmap = compressBitmap(imageBitmap);
+            imageView.setImageBitmap(compressBitmap);
+            uploadPetImage(getImageUri(getApplicationContext(), compressBitmap));
         }
     }
+
+    private Bitmap getBitmapFromUri(Uri uri) {
+        try {
+            // Load bitmap from the URI
+            return MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private Bitmap compressBitmap(Bitmap bitmap) {
+        // 设置压缩参数
+        int maxWidth = 300;
+        int maxHeight = 300;
+
+        // 获取原始图像的宽高
+        int originalWidth = bitmap.getWidth();
+        int originalHeight = bitmap.getHeight();
+
+        // 计算缩放比例
+        float scale = Math.min((float) maxWidth / originalWidth, (float) maxHeight / originalHeight);
+
+        // 创建Matrix进行缩放
+        Matrix matrix = new Matrix();
+        matrix.postScale(scale, scale);
+
+        // 使用Matrix进行缩放
+        return Bitmap.createBitmap(bitmap, 0, 0, originalWidth, originalHeight, matrix, true);
+    }
+
+    // 将Bitmap转换为Uri
+    private Uri getImageUri(Context context, Bitmap bitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
+        return Uri.parse(path);
+    }
+
+    // 上传图片
+    private void uploadPetImage(Uri imageUri) {
+        File file = new File(getRealPathFromURI(imageUri));
+        Log.d(TAG, "uploadImage: " + file.exists());
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+        String token = "Bearer " + ConfigPreferences.login_token(AddPetActivity.this);
+        RetrofitUtils.getRetrofitService().uploadPetImage(token, body)
+                .filter(new ResultFunction())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RemoteResult<AvatarResponse>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(@NonNull RemoteResult<AvatarResponse> result) {
+                        avatar = result.data.fileName;
+                        //Glide.with(AddPetActivity.this).load(result.data.fileDownloadUri).into(imageView);
+
+                        String avatarUrl = "http://47.94.99.63:8088/pet/download/" + avatar;
+                        String token = "Bearer " + ConfigPreferences.login_token(AddPetActivity.this);
+
+                        GlideUrl glideUrl = new GlideUrl(avatarUrl, new LazyHeaders.Builder()
+                                .addHeader("Authorization", token)  // 如果你使用 Bearer Token
+                                .build());
+
+                        Glide.with(AddPetActivity.this).load(glideUrl).into(imageView);
+
+
+                        ToastUtils.customToast(AddPetActivity.this, "上传成功");
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        ExceptionHandle.ResponeThrowable responeThrowable = ExceptionHandle.handleException(e);
+                        if (responeThrowable.code.equals("020000")) {
+                            ConfigPreferences.setLoginName(AddPetActivity.this, "");
+                            ConfigPreferences.setLoginToken(AddPetActivity.this, "");
+                            startActivity(new Intent(AddPetActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            ToastUtils.customToast(AddPetActivity.this, responeThrowable.message);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, projection, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String filePath = cursor.getString(columnIndex);
+        Log.d(TAG, "getRealPathFromURI: " + filePath);
+        cursor.close();
+        return filePath;
+    }
+
 }

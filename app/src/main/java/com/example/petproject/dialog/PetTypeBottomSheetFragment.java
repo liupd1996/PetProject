@@ -15,6 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class PetTypeBottomSheetFragment extends DialogFragment {
 
     private String[] petTypes = {"猫", "狗"};
+    private int defaultSelectedIndex = 0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -26,7 +27,8 @@ public class PetTypeBottomSheetFragment extends DialogFragment {
         numberPicker.setMaxValue(petTypes.length - 1);
         numberPicker.setDisplayedValues(petTypes);
         numberPicker.setWrapSelectorWheel(false);
-
+        // 设置默认选中的值
+        numberPicker.setValue(defaultSelectedIndex);
         Button btnConfirm = view.findViewById(R.id.btnConfirm);
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,6 +40,11 @@ public class PetTypeBottomSheetFragment extends DialogFragment {
         });
 
         return view;
+    }
+
+    // 用于外部设置选中项的索引
+    public void setDefaultSelectedIndex(int index) {
+        this.defaultSelectedIndex = index;
     }
 
     public void setOptions(String[] petTypes) {

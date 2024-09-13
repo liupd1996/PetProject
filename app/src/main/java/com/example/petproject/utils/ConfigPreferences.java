@@ -9,6 +9,7 @@ public class ConfigPreferences {
     public static String LOGIN_NAME = "login_name";
     public static String NAME = "name";
     public static String AVATAR = "avatar";
+    public static String PET_AVATAR = "pet_avatar";
     public static String _ID = "_id";
     public static String GENDER = "gender";
     private static SharedPreferences config;
@@ -60,6 +61,10 @@ public class ConfigPreferences {
         getInstance(context).edit().putString(AVATAR, name).apply();
     }
 
+    public static void setPetAvatar(Context context, String name) {
+        getInstance(context).edit().putString(PET_AVATAR, name).apply();
+    }
+
     //获取名称
     public static String name(Context context) {
         return getInstance(context).getString(NAME, "");
@@ -68,6 +73,11 @@ public class ConfigPreferences {
     //获取头像名称
     public static String avatar(Context context) {
         return getInstance(context).getString(AVATAR, "");
+    }
+
+    //获取头像名称
+    public static String petAvatar(Context context) {
+        return getInstance(context).getString(PET_AVATAR, "");
     }
 
     //获取用户id

@@ -1,6 +1,7 @@
 package com.example.petproject.retrofit;
 
 import com.example.petproject.bean.AvatarResponse;
+import com.example.petproject.bean.BreedRecord;
 import com.example.petproject.bean.CountResponse;
 import com.example.petproject.bean.DeleteDeviceRequest;
 import com.example.petproject.bean.DevicePetRequest;
@@ -12,24 +13,19 @@ import com.example.petproject.bean.LoginResponse;
 import com.example.petproject.bean.PetRequest;
 import com.example.petproject.bean.PetResponse;
 import com.example.petproject.bean.PetWeightRequest;
-import com.example.petproject.bean.RefreshRequest;
 import com.example.petproject.bean.RefreshResponse;
 import com.example.petproject.bean.RegisterRequest;
 import com.example.petproject.bean.RemoteResult;
 import com.example.petproject.bean.UserEditRequest;
 import com.example.petproject.bean.UserInfoResponse;
-import com.example.petproject.bean.WeightResponse;
 import com.example.petproject.bean.WeightSearchResponse;
 
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
@@ -110,12 +106,17 @@ public interface RetrofitService {
     @POST("/user/upload")
     Observable<RemoteResult<AvatarResponse>> uploadImage(@Part MultipartBody.Part file);
 
+
+    @Multipart
+    @PUT("/pet/upload")
+    Observable<RemoteResult<AvatarResponse>> uploadPetImage(@Header("Authorization") String authorization, @Part MultipartBody.Part file);
+
     @GET("/info/getDetail")
     Observable<RemoteResult<UserInfoResponse>> getDetail(@Header("Authorization") String authorization);
 
     //查询宠物品种
-    @GET("/petBreed/search")
-    Observable<RemoteResult<Object>> breedSearch(@Header("Authorization") String authorization, @Query("type") int type);
+    //@GET("/petBreed/search")
+    //Observable<RemoteResult<Object>> breedSearch(@Header("Authorization") String authorization, @Query("type") int type);
 
 
     @GET("/count/breathe")//呼吸统计
@@ -142,6 +143,8 @@ public interface RetrofitService {
     @POST("/pet/insertWeight")
     Observable<RemoteResult<Object>> addWeight(@Header("Authorization") String authorization, @Body PetWeightRequest request);
 
+    @GET("/petBreed/search")//体重搜索
+    Observable<RemoteResult<BreedRecord>> breedSearch(@Header("Authorization") String authorization, @Query("type") int type);
 
 
 

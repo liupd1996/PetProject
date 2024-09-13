@@ -6,7 +6,8 @@ import android.os.Parcelable;
 public class PetResponse implements Parcelable {
     public String avatar;
     public String birth;
-    public int breed;
+    public String breed;
+    public String breedId;
     public int gender;
     public String id;//todo check string.?
     public int isSpayed;
@@ -17,11 +18,12 @@ public class PetResponse implements Parcelable {
     public String deviceId;
     public String deviceName;
 
-    public PetResponse(String avatar, String birth, int breed, int gender, String id, int isSpayed,
+    public PetResponse(String avatar, String birth, String breed,String breedId, int gender, String id, int isSpayed,
                        int isVaccinated, String name, int type, String weight, String deviceId, String deviceName) {
         this.avatar = avatar;
         this.birth = birth;
         this.breed = breed;
+        this.breedId = breedId;
         this.gender = gender;
         this.id = id;
         this.isSpayed = isSpayed;
@@ -37,7 +39,8 @@ public class PetResponse implements Parcelable {
         // 写入数据到 Parcel
         dest.writeString(avatar);
         dest.writeString(birth);
-        dest.writeInt(breed);
+        dest.writeString(breed);
+        dest.writeString(breedId);
         dest.writeInt(gender);
         dest.writeString(id);
         dest.writeInt(isSpayed);
@@ -73,7 +76,8 @@ public class PetResponse implements Parcelable {
         // 从 Parcel 读取数据
         avatar = in.readString();
         birth = in.readString();
-        breed = in.readInt();
+        breed = in.readString();
+        breedId =in.readString();
         gender = in.readInt();
         id = in.readString();
         isSpayed = in.readInt();
